@@ -1,0 +1,120 @@
+import { styles } from "@/assets/style/auth.styles";
+import { API_URL } from "@/constants/api";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+const LoginScreen = () => {
+  const router = useRouter();
+
+  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const onLoginPress = async () => {
+    setError(""); // réinitialiser l’erreur à chaque tentative
+
+    if (!emailOrPhone || !password) {
+      setError("Please fill all fields");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/user/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          emailOrPhone: emailOrPhone,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // await AsyncStorage.setItem("token", data.token);
+        router.push("/(tabs)");
+      } else if (response.status === 401) {
+        setError("Email or password incorrect");
+      } else if (response.status === 404) {
+        setError("User not found. Please register.");
+      } else {
+        setError(data.error || "Login failed");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      setError("Server error. Please try again later.");
+    }
+  };
+
+  return (
+    <KeyboardAwareScrollView
+      style={styles.containers}
+      contentContainerStyle={{ flexGrow: 1 }}
+      enableOnAndroid={true}
+      enableAutomaticScroll={true}
+    >
+      <View style={styles.container}>
+        <Image
+          source={require("../../assets/images/revenue-i2.png")}
+          style={styles.illustration}
+          contentFit="cover"
+        />
+
+        <Text style={styles.title}>Login</Text>
+
+        {/* Message d'erreur affiché ici */}
+        {error !== "" && (
+          <View style={styles.errorBox}>
+            <Ionicons name="alert-circle" size={20} color="#E74C3C" />
+            <Text style={styles.errorText}>{error}</Text>
+            <TouchableOpacity onPress={() => setError("")}>
+              <Ionicons name="close" size={20} color="#9A8478" />
+            </TouchableOpacity>
+          </View>
+        )}
+
+        <TextInput
+          style={styles.input}
+          autoCapitalize="none"
+          value={emailOrPhone}
+          placeholderTextColor="#9A8478"
+          placeholder="Enter your phone number or email"
+          onChangeText={(email) => setEmailOrPhone(email)}
+          textContentType="username"
+          autoComplete="email"
+        />
+
+        <TextInput
+          style={styles.input}
+          value={password}
+          placeholder="Enter your password"
+          placeholderTextColor="#9A8478"
+          secureTextEntry={true}
+          onChangeText={(password) => setPassword(password)}
+        />
+
+        <TouchableOpacity >
+        <Text style={styles.forgetText}>Forgot Password ?</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onLoginPress}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
+
+        <View style={styles.footerContainer}>
+          <Text style={styles.footerText}>Already have an account?</Text>
+          <TouchableOpacity onPress={() => router.push("/auth/onboarding")}>
+            <Text style={styles.linkText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </KeyboardAwareScrollView>
+  );
+};
+
+export default LoginScreen;
