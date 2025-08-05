@@ -5,11 +5,11 @@ import NoFavoriteFound from "@/components/NoFavoriteFound";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
-import { FlatList, View } from "react-native";
-
+import { FlatList, RefreshControl, View } from "react-native";
 
 export default function FavoriteScreen() {
   const [favorites, setFavorites] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchFavorites = useCallback(async () => {
     try {
@@ -30,8 +30,15 @@ export default function FavoriteScreen() {
       setFavorites(data);
     } catch (error) {
       console.error("Erreur chargement favoris:", error);
+    } finally {
+      setRefreshing(false);
     }
   }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchFavorites();
+  }, [fetchFavorites]);
 
   useFocusEffect(
     useCallback(() => {
@@ -40,20 +47,22 @@ export default function FavoriteScreen() {
   );
 
   return (
-    
     <View style={styles.container}>
       <Header />
-        <FlatList
-          data={favorites}
-          keyExtractor={(item) => item.product_id.toString()}
-          numColumns={2}
-          renderItem={({ item }) => (
-            <FavoriteCard product={item} onToggle={fetchFavorites} />
-          )}
-          columnWrapperStyle={{ justifyContent: "space-between" }}
-          contentContainerStyle={styles.list}
-          ListEmptyComponent={<NoFavoriteFound />}
-        />
+      <FlatList
+        data={favorites}
+        keyExtractor={(item) => item.product_id.toString()}
+        numColumns={2}
+        renderItem={({ item }) => (
+          <FavoriteCard product={item} onToggle={fetchFavorites} />
+        )}
+        columnWrapperStyle={{ justifyContent: "space-between" }}
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={<NoFavoriteFound />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
     </View>
   );
 }

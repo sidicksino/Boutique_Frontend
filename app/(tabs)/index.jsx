@@ -3,47 +3,55 @@ import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import ProductCardCategorie from "@/components/ProductCategories";
 import { ResizeMode, Video } from "expo-av";
-import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ActivityIndicator, FlatList, RefreshControl, Text, View } from "react-native";
 
 const HomeScreen = () => {
   const video = useRef(null);
 
-  // États pour produits et catégories
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // Charger les catégories depuis l'API
-  useEffect(() => {
-    fetch("https://boutique-backend-47jo.onrender.com/api/categories")
-      .then((response) => response.json())
-      .then((data) => {
-        setCategories(data);
-        setLoadingCategories(false);
-      })
-      .catch((error) => {
-        console.error("Error loading categories:", error);
-        setLoadingCategories(false);
-      });
+  // Fonction pour charger les catégories
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("https://boutique-backend-47jo.onrender.com/api/categories");
+      const data = await res.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
+  // Fonction pour charger les produits
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("https://boutique-backend-47jo.onrender.com/api/products");
+      const data = await res.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error loading products:", error);
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
+
+  // Fonction de rafraîchissement (pull to refresh)
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    Promise.all([fetchProducts(), fetchCategories()]).finally(() => setRefreshing(false));
   }, []);
 
-  // Charger les produits depuis l'API
   useEffect(() => {
-    fetch("https://boutique-backend-47jo.onrender.com/api/products")
-      .then((response) => response.json())
-      .then((data) => {
-        setProducts(data);
-        setLoadingProducts(false);
-      })
-      .catch((error) => {
-        console.error("Error loading products:", error);
-        setLoadingProducts(false);
-      });
+    fetchCategories();
+    fetchProducts();
   }, []);
 
-  // Rendu de l'en-tête avec vidéo et catégories
   const renderHeader = () => (
     <View>
       <Video
@@ -64,7 +72,7 @@ const HomeScreen = () => {
           data={categories}
           keyExtractor={(item) => item.category_id.toString()}
           renderItem={({ item }) => <ProductCardCategorie product={item} />}
-          horizontal={true}
+          horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 16 }}
         />
@@ -88,6 +96,9 @@ const HomeScreen = () => {
           ListHeaderComponent={renderHeader}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       )}
     </View>

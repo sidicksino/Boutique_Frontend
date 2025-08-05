@@ -4,29 +4,46 @@ import ProductCard from "@/components/ProductCard";
 import SafeScreen from "@/components/SafeScreen";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  RefreshControl,
+  Text,
+  View,
+} from "react-native";
 
 const CategoryDetails = () => {
   const { categoryId, categoryName, categoryImage } = useLocalSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(
+        `https://boutique-backend-47jo.onrender.com/api/categories/${categoryId}/products`
+      );
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      console.error("Erreur chargement produits :", err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    fetch(
-      `https://boutique-backend-47jo.onrender.com/api/categories/${categoryId}/products`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Erreur chargement produits :", err);
-        setLoading(false);
-      });
+    fetchProducts();
   }, [categoryId]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchProducts();
+  }, []);
 
   return (
     <SafeScreen>
@@ -61,6 +78,9 @@ const CategoryDetails = () => {
             renderItem={({ item }) => <ProductCard product={item} />}
             contentContainerStyle={styles.list}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
         )}
       </View>
