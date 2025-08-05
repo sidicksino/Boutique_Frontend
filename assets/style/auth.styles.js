@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
         color: COLORS.text,
         fontSize: 16,
     },
-    forgetText:{
+    forgetText: {
         color: COLORS.primary,
         fontSize: 14,
         fontWeight: "500",
@@ -122,5 +122,14 @@ export const styles = StyleSheet.create({
         marginBottom: 0,
         textAlign: "center",
         fontWeight: "500",
+    },
+    inputContainer: {
+        position: "relative",
+    },
+    eyeButton: {
+        position: "absolute",
+        right: 12,
+        top: 12,
+        padding: 4,
     },
 });

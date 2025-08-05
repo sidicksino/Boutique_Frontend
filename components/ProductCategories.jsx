@@ -8,8 +8,19 @@ const ProductCardCategorie = ({ product }) => {
 
   return (
     <View style={styles.cardCategorie}>
-      <TouchableOpacity onPress={() => navigation.push("details", { product })}>
-        <Image source={{ uri: product.image_url }} resizeMode="cover" style={styles.imageCategorie} />
+      <TouchableOpacity
+        onPress={() =>
+          navigation.push("category-details", {
+            categoryId: product.category_id,
+            categoryName: product.name, // facultatif pour affichage dans la page
+          })
+        }
+      >
+        <Image
+          source={{ uri: product.image_url }}
+          resizeMode="cover"
+          style={styles.imageCategorie}
+        />
       </TouchableOpacity>
     </View>
   );

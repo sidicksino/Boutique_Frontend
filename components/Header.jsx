@@ -10,7 +10,7 @@ const Header = () => {
   const router = useRouter();
 
   const profilePress = () => {
-    router.push('/(tabs)/ProfileScreen')
+    router.push('/ProfileScreen')
   };
     return (
       <View style={styles.header}>

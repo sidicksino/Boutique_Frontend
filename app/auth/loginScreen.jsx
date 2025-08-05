@@ -1,6 +1,7 @@
 import { styles } from "@/assets/style/auth.styles";
 import { API_URL } from "@/constants/api";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -13,6 +14,7 @@ const LoginScreen = () => {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState("");
 
   const onLoginPress = async () => {
     setError(""); // réinitialiser l’erreur à chaque tentative
@@ -37,7 +39,7 @@ const LoginScreen = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // await AsyncStorage.setItem("token", data.token);
+        await AsyncStorage.setItem("userToken", data.token);
         router.push("/(tabs)");
       } else if (response.status === 401) {
         setError("Email or password incorrect");
@@ -89,18 +91,29 @@ const LoginScreen = () => {
           textContentType="username"
           autoComplete="email"
         />
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            value={password}
+            placeholder="Enter your password"
+            placeholderTextColor="#9A8478"
+            secureTextEntry={!showPassword}
+            onChangeText={(password) => setPassword(password)}
+          />
+          <TouchableOpacity
+             style={styles.eyeButton}
+            onPress={() => setShowPassword(!showPassword)}          
+          >
+            <Ionicons
+              name={showPassword ? "eye-outline" : "eye-off-outline"}
+              size={24}
+              color="#9A8478"
+            />
+          </TouchableOpacity>
 
-        <TextInput
-          style={styles.input}
-          value={password}
-          placeholder="Enter your password"
-          placeholderTextColor="#9A8478"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-
-        <TouchableOpacity >
-        <Text style={styles.forgetText}>Forgot Password ?</Text>
+        </View>
+        <TouchableOpacity onPress={() => router.push("/auth/forgetPassword")}>
+          <Text style={styles.forgetText}>Forgot Password ?</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={onLoginPress}>
           <Text style={styles.buttonText}>Sign In</Text>

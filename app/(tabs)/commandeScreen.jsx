@@ -1,10 +1,14 @@
+import { styles } from "@/assets/style/home.style";
+import Header from "@/components/Header";
+import NoOrderFound from "@/components/NoOrderFound";
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 const CommandeScreen = () => {
   return (
-    <View>
-      <Text>Commande Screen</Text>
+    <View style={styles.container}>
+      <Header />
+      <NoOrderFound/>
     </View>
   );
 };

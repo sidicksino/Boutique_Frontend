@@ -1,20 +1,124 @@
 import { COLORS } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../assets/style/produit.styles";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onToggle }) => {
   const navigation = useNavigation();
+  const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    const checkFavorite = async () => {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) return;
+
+      try {
+        const res = await fetch(
+          "https://boutique-backend-47jo.onrender.com/api/favorites",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = await res.json();
+
+        let favoritesArray = [];
+
+        if (Array.isArray(data)) {
+          favoritesArray = data;
+        } else if (Array.isArray(data.favorites)) {
+          favoritesArray = data.favorites;
+        } else {
+          console.warn(" Format inattendu des données de favoris", data);
+          return;
+        }
+
+        const liked = favoritesArray.some(
+          (p) => p.product_id === product.product_id
+        );
+        setIsLiked(liked);
+      } catch (error) {
+        console.error(" Erreur check favoris:", error);
+      }
+    };
+
+    checkFavorite();
+  }, [product]);
+
+  const toggleLike = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        console.warn(" Aucun token trouvé. Veuillez vous connecter.");
+        return;
+      }
+
+      if (isLiked) {
+        const res = await fetch(
+          `https://boutique-backend-47jo.onrender.com/api/favorites/${product.product_id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) {
+          console.error(" Erreur de suppression du favori");
+          return;
+        }
+
+        setIsLiked(false);
+      } else {
+        const res = await fetch(
+          `https://boutique-backend-47jo.onrender.com/api/favorites`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ product_id: product.product_id }),
+          }
+        );
+        if (!res.ok) {
+          console.error(" Erreur d'ajout aux favoris");
+          return;
+        }
+        setIsLiked(true);
+      }
+      if (onToggle) onToggle();
+    } catch (err) {
+      console.error(" Erreur dans toggleLike:", err);
+    }
+  };
 
   return (
     <View style={styles.cardContenair}>
       <View style={styles.card}>
         <TouchableOpacity
-          onPress={() => navigation.push("details", { product })}
+          onPress={() =>
+            navigation.push("details", { product: JSON.stringify(product) })
+          }
         >
-          <Image  source={{ uri: product.image_url }} resizeMode="cover" style={styles.image} />
+          <Image
+            source={{ uri: product.image_url }}
+            resizeMode="cover"
+            style={styles.image}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.heartFavori} onPress={toggleLike}>
+          <Ionicons
+            name={isLiked ? "heart" : "heart-outline"}
+            size={30}
+            color={isLiked ? "red" : COLORS.primary}
+          />
         </TouchableOpacity>
 
         <View style={styles.content}>
@@ -24,9 +128,6 @@ const ProductCard = ({ product }) => {
 
           <View style={styles.row}>
             <Text style={styles.price}>${product.price}</Text>
-            <TouchableOpacity style={styles.heartFavori}>
-              <Ionicons name="heart-outline" size={40} color={COLORS.primary} />
-            </TouchableOpacity>
           </View>
         </View>
       </View>

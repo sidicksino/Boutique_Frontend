@@ -1,47 +1,46 @@
-import { COLORS } from "@/constants/colors";
-import { useLocalSearchParams } from "expo-router";
-import { Image, StyleSheet, Text, View } from "react-native";
+import SafeScreen from "@/components/SafeScreen";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { styles } from "../assets/style/datail.style";
 
-export default function ProductDetails() {
+const DetailsScreen = () => {
   const { product } = useLocalSearchParams();
-  const item = JSON.parse(decodeURIComponent(product));
+  const navigation = useNavigation();
+
+  const parsedProduct =
+    typeof product === "string" ? JSON.parse(product) : product;
 
   return (
-    <View style={styles.container}>
-      <Image source={item.image} style={styles.image} />
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.price}>${item.price}</Text>
-      <Text style={styles.description}>
-        Ceci est une belle description de produit avec le thème forêt 🍃.
-      </Text>
-    </View>
-  );
-}
+    <SafeScreen>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <AntDesign name="left" size={24} color="black" />
+        </TouchableOpacity>
+        <View style={styles.productContainer}>
+          <Image
+            source={{ uri: parsedProduct.image_url }}
+            style={styles.image}
+          />
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    padding: 16,
-  },
-  image: {
-    width: "100%",
-    height: 250,
-    borderRadius: 16,
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: COLORS.text,
-    marginVertical: 10,
-  },
-  price: {
-    fontSize: 18,
-    color: COLORS.textLight,
-  },
-  description: {
-    marginTop: 12,
-    fontSize: 14,
-    color: COLORS.textLight,
-  },
-});
+          <Text style={styles.name}>{parsedProduct.name}</Text>
+          <Text style={styles.price}>${parsedProduct.price}</Text>
+          <Text style={styles.description}>
+            {parsedProduct.description || "No description available."}
+          </Text>
+          <TouchableOpacity
+            style={styles.addBottom}
+            onPress={() => alert("Added to cart!")}
+          >
+            <Text style={styles.addButtonText}>Add to Cart</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeScreen>
+  );
+};
+
+export default DetailsScreen;

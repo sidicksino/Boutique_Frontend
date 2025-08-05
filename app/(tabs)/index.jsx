@@ -87,7 +87,6 @@ const HomeScreen = () => {
           renderItem={({ item }) => <ProductCard product={item} />}
           ListHeaderComponent={renderHeader}
           contentContainerStyle={styles.list}
-          columnWrapperStyle={{ justifyContent: "space-between" }}
           showsVerticalScrollIndicator={false}
         />
       )}

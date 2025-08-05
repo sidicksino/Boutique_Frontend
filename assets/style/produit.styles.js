@@ -59,8 +59,8 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
-        left: 100,
-        bottom: 130,
+        left: 130,
+        bottom: 150,
     },
     /// produits categories 
     cardCategorie: {
