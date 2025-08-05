@@ -12,7 +12,8 @@ const ProductCardCategorie = ({ product }) => {
         onPress={() =>
           navigation.push("category-details", {
             categoryId: product.category_id,
-            categoryName: product.name, // facultatif pour affichage dans la page
+            categoryName: product.name,
+            categoryImage: product.image_url,
           })
         }
       >

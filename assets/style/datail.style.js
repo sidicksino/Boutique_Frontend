@@ -5,7 +5,6 @@ import { COLORS } from "../../constants/colors";
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
         backgroundColor: COLORS.background,
     },
     productContainer: {
@@ -15,9 +14,10 @@ export const styles = StyleSheet.create({
         marginBottom: 100,
     },
     backButton: {
+        position: "absolute",
         marginBottom: 0,
         top: 10,
-        left: 10,
+        left: 20,
     },
     image: {
         width: "100%",
@@ -25,6 +25,13 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 20,
     },
+    categoryImage: {
+        width: "100%",
+        height: 250,
+        borderRadius: 0,
+        top: 0,
+    },
+
     name: {
         fontSize: 24,
         fontWeight: "bold",
@@ -50,5 +57,12 @@ export const styles = StyleSheet.create({
         color: COLORS.white,
         fontWeight: "600",
         marginLeft: 4,
+    },
+    categoryTitle:{
+        fontSize: 20,
+        fontWeight: "bold",
+        marginVertical: 10,
+        paddingHorizontal: 16,
+        color: COLORS.primary,
     },
 });

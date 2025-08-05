@@ -3,6 +3,12 @@ import { StyleSheet } from "react-native";
 import { COLORS } from "../../constants/colors";
 
 export const styles = StyleSheet.create({
+    // style back button
+    backButton:{
+        position: "relative",
+        top: 0,
+        left: 10,
+    },
     welcome: {
         flex: 1,
         backgroundColor: COLORS.primary,
