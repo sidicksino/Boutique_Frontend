@@ -3,14 +3,49 @@ import { API_URL } from "@/constants/api";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-
 const SignUpPhoneScreen = () => {
+  const router = useRouter();
+
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const onSignUpPress = async () => {
+    setLoading(true);
     if (!phone || !password) {
       alert("Please fill all fields");
+      setLoading(false);
+      return;
+    }
+
+    // Vérification du format du numéro de téléphone
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/; // Format international
+    if (!phoneRegex.test(phone)) {
+      alert("Please enter a valid phone number");
+      setLoading(false);
+      return;
+    }
+
+    // Vérification de la longueur du mot de passe
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters long");
+      setLoading(false);
+      return;
+    }
+
+    // Vérification que le mot de passe contient au moins une lettre et un chiffre
+    if (!/(?=.*[0-9])(?=.*[a-zA-Z])/.test(password)) {
+      alert("Password must include at least one letter and one number");
+      setLoading(false);
       return;
     }
 
@@ -37,12 +72,11 @@ const SignUpPhoneScreen = () => {
     } catch (error) {
       console.error("Error:", error);
       alert("Server error");
+    } finally {
+      // désactive le loading à la fin (succès ou erreur)
+      setLoading(false);
     }
   };
-  const router = useRouter();
-
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
 
   return (
     <KeyboardAwareScrollView
@@ -68,8 +102,7 @@ const SignUpPhoneScreen = () => {
           placeholder="Enter your phone number"
           onChangeText={(text) => setPhone(text)}
           keyboardType="phone-pad"
-          textContentType="telephoneNumber"
-          autoComplete="tel"
+          autoCorrect={false}
         />
 
         <TextInput
@@ -79,10 +112,34 @@ const SignUpPhoneScreen = () => {
           placeholderTextColor="#9A8478"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="password"
         />
 
-        <TouchableOpacity style={styles.button} onPress={onSignUpPress}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={onSignUpPress}
+          disabled={loading}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {loading && (
+              <ActivityIndicator
+                color="#fff"
+                size="small"
+                style={{ marginRight: 8 }}
+              />
+            )}
+            <Text style={styles.buttonText}>
+              {loading ? "Signing up..." : "Sign Up"}
+            </Text>
+          </View>
         </TouchableOpacity>
 
         <View style={styles.footerContainer}>

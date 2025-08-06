@@ -1,11 +1,17 @@
 import { styles } from "@/assets/style/auth.styles";
 import { API_URL } from "@/constants/api";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const LoginScreen = () => {
@@ -14,13 +20,17 @@ const LoginScreen = () => {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onLoginPress = async () => {
     setError(""); // réinitialiser l’erreur à chaque tentative
 
+    setLoading(true);
+
     if (!emailOrPhone || !password) {
       setError("Please fill all fields");
+      setLoading(false);
       return;
     }
 
@@ -51,6 +61,9 @@ const LoginScreen = () => {
     } catch (error) {
       console.error("Login Error:", error);
       setError("Server error. Please try again later.");
+    } finally {
+      // désactive le loading à la fin (succès ou erreur)
+      setLoading(false);
     }
   };
 
@@ -101,8 +114,8 @@ const LoginScreen = () => {
             onChangeText={(password) => setPassword(password)}
           />
           <TouchableOpacity
-             style={styles.eyeButton}
-            onPress={() => setShowPassword(!showPassword)}          
+            style={styles.eyeButton}
+            onPress={() => setShowPassword(!showPassword)}
           >
             <Ionicons
               name={showPassword ? "eye-outline" : "eye-off-outline"}
@@ -110,13 +123,31 @@ const LoginScreen = () => {
               color="#9A8478"
             />
           </TouchableOpacity>
-
         </View>
         <TouchableOpacity onPress={() => router.push("/auth/forgetPassword")}>
           <Text style={styles.forgetText}>Forgot Password ?</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onLoginPress}>
-          <Text style={styles.buttonText}>Sign In</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={onLoginPress}
+          disabled={loading}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {loading && (
+              <ActivityIndicator
+                color="#fff"
+                size="small"
+                style={{ marginRight: 8 }}
+              />
+            )}
+            <Text style={styles.buttonText}>Sign In</Text>
+          </View>
         </TouchableOpacity>
 
         <View style={styles.footerContainer}>
