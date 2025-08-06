@@ -1,8 +1,8 @@
+import { styles } from "@/assets/style/datail.style";
 import SafeScreen from "@/components/SafeScreen";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { styles } from "../assets/style/datail.style";
 
 const DetailsScreen = () => {
   const { product } = useLocalSearchParams();

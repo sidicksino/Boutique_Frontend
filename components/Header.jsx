@@ -10,19 +10,18 @@ const Header = () => {
   const router = useRouter();
 
   const profilePress = () => {
-    router.push('/ProfileScreen')
+    router.push('pages/ProfileScreen')
   };
     return (
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Text style={styles.headerTitle}>Sino</Text>
         </View>
-        
         <View style={styles.headerRight}>
           <Ionicons name="search-outline" style={styles.headerIcon} />
           <TouchableOpacity onPress={profilePress} style={styles.logoSocial}>
           <Image
-            source={ require('../assets/images/avatar.jpeg') }
+            source={ require('../assets/images/phote.jpeg') }
             style={styles.headerLogo}
           />
           </TouchableOpacity>

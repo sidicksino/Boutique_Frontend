@@ -10,7 +10,7 @@ const ProductCardCategorie = ({ product }) => {
     <View style={styles.cardCategorie}>
       <TouchableOpacity
         onPress={() =>
-          navigation.push("category-details", {
+          navigation.push("pages/category-details", {
             categoryId: product.category_id,
             categoryName: product.name,
             categoryImage: product.image_url,

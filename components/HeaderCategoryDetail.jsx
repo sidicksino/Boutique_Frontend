@@ -10,7 +10,7 @@ const HeaderCategory = () => {
   const navigation = useNavigation();
 
   const profilePress = () => {
-    router.push("/ProfileScreen");
+    router.push("pages/ProfileScreen");
   };
   return (
     <View style={styles.header}>

@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     backButton:{
         position: "relative",
         top: 0,
-        left: 10,
+        left: 5,
     },
     welcome: {
         flex: 1,

@@ -3,11 +3,16 @@ import { API_URL } from "@/constants/api";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const SignUpScreen = () => {
-
   const router = useRouter();
 
   const [emailAddress, setEmailAddress] = useState("");
@@ -17,7 +22,7 @@ const SignUpScreen = () => {
     setLoading(true);
     if (!emailAddress || !password) {
       alert("Please fill all fields");
-      setLoading(false)
+      setLoading(false);
       return;
     }
     // Vérification du format de l'adresse e-mail
@@ -64,11 +69,10 @@ const SignUpScreen = () => {
       } else {
         alert(data.message || "Registration failed ");
       }
-      
     } catch (error) {
       console.error("Error:", error);
       alert("Server error");
-    }finally {
+    } finally {
       // désactive le loading à la fin (succès ou erreur)
       setLoading(false);
     }
@@ -111,7 +115,7 @@ const SignUpScreen = () => {
           onChangeText={(password) => setPassword(password)}
         />
 
-<TouchableOpacity
+        <TouchableOpacity
           style={styles.button}
           onPress={onSignUpPress}
           disabled={loading}
@@ -137,7 +141,7 @@ const SignUpScreen = () => {
         </TouchableOpacity>
 
         <View style={styles.footerContainer}>
-        <Text style={styles.footerText}>Already have an account?</Text>
+          <Text style={styles.footerText}>Already have an account?</Text>
           <TouchableOpacity onPress={() => router.push("/auth/loginScreen")}>
             <Text style={styles.linkText}>Sign in</Text>
           </TouchableOpacity>
