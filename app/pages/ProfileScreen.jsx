@@ -4,7 +4,7 @@ import { COLORS } from "@/constants/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
@@ -18,9 +18,8 @@ import {
   Switch,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
-
 
 const ProfileScreen = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -208,7 +207,11 @@ const ProfileScreen = () => {
               style={styles.editIcon}
               onPress={pickImageAndUpload}
             >
-              <MaterialCommunityIcons name="camera-plus-outline" size={24} color={COLORS.primary}/>
+              <MaterialCommunityIcons
+                name="camera-plus-outline"
+                size={24}
+                color={COLORS.primary}
+              />
             </TouchableOpacity>
 
             {/* Modal corrigé */}
@@ -328,6 +331,12 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
         </View>
+
+        {user?.role === "Admin" && (
+          <TouchableOpacity style={styles.logoutButton} onPress={() => router.push("/admin/dashbord")}>
+            <Text style={styles.adminText}>Access to your dashboard</Text>
+          </TouchableOpacity>
+        )}
 
         {/* Logout */}
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>

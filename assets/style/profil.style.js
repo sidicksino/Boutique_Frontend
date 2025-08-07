@@ -29,6 +29,12 @@ export const styles = StyleSheet.create({
     fontWeight: "500",
     padding: 8,
   },
+  adminText:{
+    color: COLORS.primary,
+    fontSize: 16,
+    fontWeight: "500",
+    padding: 0,
+  },
   profileSection: {
     alignItems: "center",
     marginVertical: 30,
@@ -132,11 +138,11 @@ export const styles = StyleSheet.create({
   logoutButton: {
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 20,
+    marginVertical: 0,
     backgroundColor: COLORS.card,
     borderRadius: 12,
     padding: 20,
-    marginBottom: 20,
+    marginBottom: 10,
     shadowColor: COLORS.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

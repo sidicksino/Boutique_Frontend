@@ -16,7 +16,7 @@ export default function RootLayout() {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
-        if (!pathname.startsWith("/auth")) {
+        if (!pathname.startsWith("/")) {
           router.replace("/auth/welcomScreen");
         }
       }
