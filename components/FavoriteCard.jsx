@@ -46,7 +46,7 @@ const FavoriteCard = ({ product, onToggle }) => {
       <View style={styles.card}>
         <TouchableOpacity
           onPress={() =>
-            navigation.push("details", { product: JSON.stringify(product) })
+            navigation.push("pages/details", { product: JSON.stringify(product) })
           }
         >
           <Image

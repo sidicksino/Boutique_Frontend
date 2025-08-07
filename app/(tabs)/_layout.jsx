@@ -1,12 +1,16 @@
 import SafeScreen from "@/components/SafeScreen";
+import { useCart } from "@/context/CartContext";
 import { Ionicons } from "@expo/vector-icons";
 import Octicons from '@expo/vector-icons/Octicons';
 import { Tabs } from "expo-router";
 import React from "react";
+import { Text, View } from "react-native";
 import { COLORS } from "../../constants/colors";
 
-
 const TabsLayout = () => {
+  const { cartItems } = useCart();
+  const totalCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
   return (
     <SafeScreen>
       <Tabs
@@ -43,7 +47,7 @@ const TabsLayout = () => {
           name="index"
           options={{
             title: "Home",
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: ({ color }) => (
               <Octicons name="home" size={24} color={color} />
             ),
           }}
@@ -52,7 +56,7 @@ const TabsLayout = () => {
           name="commandeScreen"
           options={{
             title: "Orders",
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: ({ color }) => (
               <Ionicons name="list-circle-outline" size={30} color={color} />
             ),
           }}
@@ -61,8 +65,28 @@ const TabsLayout = () => {
           name="CardScreen"
           options={{
             title: "Cart",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="cart-outline" size={30} color={color} />
+            tabBarIcon: ({ color }) => (
+              <View style={{ position: "relative" }}>
+                <Ionicons name="cart-outline" size={30} color={color} />
+                  <View
+                    style={{
+                      position: "absolute",
+                      top: -4,
+                      right: -10,
+                      backgroundColor: "red",
+                      borderRadius: 10,
+                      paddingHorizontal: 5,
+                      paddingVertical: 1,
+                      minWidth: 18,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text style={{ color: "white", fontSize: 10, fontWeight: "bold" }}>
+                      {totalCount}
+                    </Text>
+                  </View>
+              </View>
             ),
           }}
         />
@@ -70,7 +94,7 @@ const TabsLayout = () => {
           name="FavoriteScreen"
           options={{
             title: "Favorites",
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: ({ color }) => (
               <Ionicons name="heart-outline" size={30} color={color} />
             ),
           }}

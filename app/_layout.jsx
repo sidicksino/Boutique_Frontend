@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack, usePathname, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import { CartProvider } from "../context/CartContext";
 
 export default function RootLayout() {
   const [isAuthLoading, setIsAuthLoading] = useState(true);
@@ -29,11 +30,12 @@ export default function RootLayout() {
   if (isAuthLoading) return null;
 
   return (
-    <>
+    <CartProvider>
+
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
       </Stack>
       <StatusBar style="auto" />
-    </>
+      </CartProvider>
   );
 }
