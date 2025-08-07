@@ -50,7 +50,7 @@ const LoginScreen = () => {
 
       if (response.ok) {
         await AsyncStorage.setItem("userToken", data.token);
-        router.push("/(tabs)");
+        router.replace("/(tabs)");
       } else if (response.status === 401) {
         setError("Email or password incorrect");
       } else if (response.status === 404) {

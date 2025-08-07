@@ -18,8 +18,15 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     color: COLORS.text,
+    marginLeft: 0
   },
   backButton: {
+    padding: 8,
+  },
+  editText:{
+    color: COLORS.primary,
+    fontSize: 16,
+    fontWeight: "500",
     padding: 8,
   },
   profileSection: {
@@ -28,7 +35,7 @@ export const styles = StyleSheet.create({
   },
   avatarContainer: {
     position: "relative",
-    marginBottom: 15,
+    marginBottom: 5,
   },
   avatar: {
     width: 120,
@@ -49,10 +56,11 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
+    color: COLORS.primary,
   },
   name: {
-    fontSize: 22,
-    fontWeight: "600",
+    fontSize: 18,
+    fontWeight: "400",
     color: COLORS.text,
     marginBottom: 5,
   },
@@ -122,16 +130,56 @@ export const styles = StyleSheet.create({
     marginRight: 5,
   },
   logoutButton: {
-    backgroundColor: COLORS.errorLight,
-    borderRadius: 12,
-    padding: 16,
     alignItems: "center",
     justifyContent: "center",
     marginVertical: 20,
+    backgroundColor: COLORS.card,
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: COLORS.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+    
   },
   logoutText: {
-    color: COLORS.error,
+    color: COLORS.expense,
     fontSize: 16,
     fontWeight: "600",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  modalOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.8)',
+  },
+  
+  modalContent: {
+    zIndex: 2,
+    width: '90%',
+    height: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  fullImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+  },
+  
+  closeButton: {
+    position: 'absolute',
+    top: -40, // Au-dessus de l'image
+    right: 0,
+    padding: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 20,
   },
 });

@@ -21,7 +21,7 @@ const Header = () => {
           <Ionicons name="search-outline" style={styles.headerIcon} />
           <TouchableOpacity onPress={profilePress} style={styles.logoSocial}>
           <Image
-            source={ require('../assets/images/phote.jpeg') }
+            source={ require('../assets/images/avatar.jpeg') }
             style={styles.headerLogo}
           />
           </TouchableOpacity>
