@@ -2,6 +2,7 @@ import { styles } from "@/assets/style/datail.style";
 import HeaderCategory from "@/components/HeaderCategoryDetail";
 import ProductCard from "@/components/ProductCard";
 import SafeScreen from "@/components/SafeScreen";
+import { COLORS } from "@/constants/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -13,6 +14,7 @@ import {
   Text,
   View,
 } from "react-native";
+
 
 const CategoryDetails = () => {
   const { categoryId, categoryName, categoryImage } = useLocalSearchParams();
@@ -49,21 +51,28 @@ const CategoryDetails = () => {
     <SafeScreen>
       <View style={styles.container}>
         <HeaderCategory />
+        
         {categoryImage && (
-          <Image
-            source={{ uri: categoryImage }}
-            style={styles.categoryImage}
-            resizeMode="cover"
-          />
+          <View style={styles.imageContainerCategory}>
+            <Image
+              source={{ uri: categoryImage }}
+              style={styles.categoryImage}
+              resizeMode="cover"
+            />
+            <View style={styles.imageOverlay} />
+            <Text style={styles.categoryTitle}>{categoryName}</Text>
+          </View>
         )}
 
-        <Text style={styles.categoryTitle}>Produits dans "{categoryName}"</Text>
-
         {loading ? (
-          <ActivityIndicator size="large" color="gray" />
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          </View>
         ) : products.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <AntDesign name="inbox" size={64} color="gray" />
+            <View style={styles.emptyIcon}>
+              <AntDesign name="inbox" size={64} color="white" />
+            </View>
             <Text style={styles.emptyText}>Aucun produit trouvé</Text>
             <Text style={styles.emptySubText}>
               Revenez plus tard pour voir les nouveaux articles dans cette
@@ -79,7 +88,15 @@ const CategoryDetails = () => {
             contentContainerStyle={styles.list}
             showsVerticalScrollIndicator={false}
             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              <RefreshControl 
+                refreshing={refreshing} 
+                onRefresh={onRefresh}
+                colors={[COLORS.primary]}
+                tintColor={COLORS.primary}
+              />
+            }
+            ListHeaderComponent={
+              <Text style={styles.sectionTitleCategory}>Produits dans "{categoryName}"</Text>
             }
           />
         )}
