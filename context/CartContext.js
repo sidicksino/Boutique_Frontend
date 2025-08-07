@@ -44,8 +44,12 @@ export const CartProvider = ({ children }) => {
     await AsyncStorage.removeItem("cartItems");
   };
 
+  const removeFromCart = (productId) => {
+    setCartItems(prev => prev.filter(item => item.product.product_id !== productId));
+  };  
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, clearCart }}>
+    <CartContext.Provider value={{ cartItems, addToCart, clearCart , removeFromCart}}>
       {children}
     </CartContext.Provider>
   );
