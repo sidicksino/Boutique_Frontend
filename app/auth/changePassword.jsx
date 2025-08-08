@@ -1,4 +1,5 @@
 import { styles } from "@/assets/style/auth.styles";
+import { API_URL } from "@/constants/api";
 import { COLORS } from "@/constants/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -13,8 +14,6 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
-const API_URL = "https://ton-api-url.com"; // À adapter
 
 const ChangePassword = () => {
   const [password, setPassword] = useState("");
