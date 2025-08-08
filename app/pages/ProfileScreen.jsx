@@ -1,6 +1,7 @@
 import { styles } from "@/assets/style/profil.style";
 import SafeScreen from "@/components/SafeScreen";
 import { COLORS } from "@/constants/colors";
+import { useCart } from "@/context/CartContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -31,6 +32,7 @@ const ProfileScreen = () => {
   const [profilePhoto, setProfilePhoto] = useState(null);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const { logout } = useCart();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -87,6 +89,7 @@ const ProfileScreen = () => {
         text: "Logout",
         onPress: async () => {
           await AsyncStorage.removeItem("userToken");
+          logout();
           router.replace("/auth/welcomScreen");
         },
       },

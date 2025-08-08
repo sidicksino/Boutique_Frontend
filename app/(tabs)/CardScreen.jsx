@@ -1,3 +1,4 @@
+// Fichier: screens/CardScreen.js
 import { styles } from "@/assets/style/cardscreen.style";
 import Header from "@/components/Header";
 import NoCartFound from "@/components/NoCartFound";
@@ -5,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   Image,
@@ -14,7 +16,7 @@ import {
 } from "react-native";
 
 const CardScreen = () => {
-  const { cartItems, clearCart, removeFromCart } = useCart();
+  const { cartItems, clearCart, removeFromCart, isLoading } = useCart();
 
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -22,15 +24,23 @@ const CardScreen = () => {
   );
 
   const handleClearCart = () => {
-    Alert.alert("Clear Cart", "Are you sure?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Yes", onPress: clearCart },
+    Alert.alert("Vider le panier", "Êtes-vous sûr ?", [
+      { text: "Annuler", style: "cancel" },
+      { text: "Oui", onPress: clearCart },
     ]);
   };
 
   const handleRemoveItem = (productId) => {
     removeFromCart(productId);
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -52,9 +62,9 @@ const CardScreen = () => {
                 />
                 <View style={styles.details}>
                   <Text style={styles.name}>{item.product.name}</Text>
-                  <Text style={styles.info}>Qty: {item.quantity}</Text>
+                  <Text style={styles.info}>Qté: {item.quantity}</Text>
                   <Text style={styles.info}>
-                    Price: ${item.product.price * item.quantity}
+                    Prix: ${item.product.price * item.quantity}
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -75,13 +85,13 @@ const CardScreen = () => {
                 style={[styles.button, styles.clearButton]}
                 onPress={handleClearCart}
               >
-                <Text style={styles.buttonText}>Clear Cart</Text>
+                <Text style={styles.buttonText}>Vider le panier</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.checkoutButton]}
-                onPress={() => alert("Checkout not implemented")}
+                onPress={() => alert("Checkout non implémenté")}
               >
-                <Text style={styles.buttonText}>Checkout</Text>
+                <Text style={styles.buttonText}>Commander</Text>
               </TouchableOpacity>
             </View>
           </View>
