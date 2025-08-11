@@ -126,4 +126,4 @@ export const THEMES = {
 };
 
 // 👇 change this to switch theme
-export const COLORS = THEMES.purple.light;
+export const COLORS = THEMES.forest.light;

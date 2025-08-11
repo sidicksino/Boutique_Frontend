@@ -336,7 +336,7 @@ const ProfileScreen = () => {
         </View>
 
         {user?.role === "Admin" && (
-          <TouchableOpacity style={styles.logoutButton} onPress={() => router.push("/admin/dashbord")}>
+          <TouchableOpacity style={styles.logoutButton} onPress={() => router.push("/admin/AdminDashboard")}>
             <Text style={styles.adminText}>Access to your dashboard</Text>
           </TouchableOpacity>
         )}
