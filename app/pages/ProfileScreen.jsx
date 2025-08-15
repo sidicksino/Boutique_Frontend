@@ -10,6 +10,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { router, useNavigation } from "expo-router";
+import LottieView from 'lottie-react-native';
 import React, { useEffect, useState } from "react";
 import {
   Alert,
@@ -19,7 +20,7 @@ import {
   Switch,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 const ProfileScreen = () => {
@@ -172,6 +173,24 @@ const ProfileScreen = () => {
       Alert.alert("Error", error.message || "Something went wrong");
     }
   };
+
+  if (loading) {
+    return (
+      <SafeScreen>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <LottieView
+            source={require('../../assets/images/loading.json')}
+            autoPlay
+            loop
+            style={{ width: 150, height: 150 }}
+          />
+          <Text style={{ marginTop: 20, fontSize: 16, color: COLORS.primary }}>
+            Loading profile...
+          </Text>
+        </View>
+      </SafeScreen>
+    );
+  }
 
   return (
     <SafeScreen>
@@ -336,7 +355,7 @@ const ProfileScreen = () => {
         </View>
 
         {user?.role === "Admin" && (
-          <TouchableOpacity style={styles.logoutButton} onPress={() => router.push("/admin/AdminDashboard")}>
+          <TouchableOpacity style={styles.logoutButton} onPress={() => router.push("/(admin)")}>
             <Text style={styles.adminText}>Access to your dashboard</Text>
           </TouchableOpacity>
         )}

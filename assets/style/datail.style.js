@@ -183,8 +183,7 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 16,
     },
     list: {
-        paddingHorizontal: 12,
-        paddingBottom: 30,
+        paddingHorizontal: 0,
     },
     loadingContainer: {
         flex: 1,

@@ -125,5 +125,10 @@ export const THEMES = {
   },
 };
 
+
+// "c":{"a":0,"k":[0.416,0.106,0.604,1]} // violet
+// "c":{"a":0,"k":[0.180,0.49,0.196,1]} // vert
+// "c":{"a":0,"k":[0.545,0.349,0.239,1]} // marron
+
 // 👇 change this to switch theme
-export const COLORS = THEMES.forest.light;
+export const COLORS = THEMES.coffee.light;
