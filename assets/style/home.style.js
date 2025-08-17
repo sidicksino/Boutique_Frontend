@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     backButton:{
         position: "relative",
         top: 0,
-        left: 5,
+        left: 0,
     },
     welcome: {
         flex: 1,
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         paddingVertical: 10,
         borderBottomWidth: 1,
         borderBottomColor: COLORS.primary,

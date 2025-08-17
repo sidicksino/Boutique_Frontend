@@ -20,7 +20,7 @@ const HomeScreen = () => {
     try {
       const res = await fetch("https://boutique-backend-47jo.onrender.com/api/categories");
       const data = await res.json();
-      setCategories(data);
+      setCategories(data.categories);
     } catch (error) {
       console.error("Error loading categories:", error);
     } finally {

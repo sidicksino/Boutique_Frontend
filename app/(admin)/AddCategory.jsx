@@ -139,7 +139,7 @@ const AddCategory = () => {
                 <Text style={styles.label}>Category Name</Text>
                 <View style={styles.inputContainer}>
                   <Ionicons
-                    name="card-outline"
+                    name="pricetag-outline"
                     size={20}
                     color={COLORS.primary}
                     style={styles.inputIcon}
@@ -162,7 +162,7 @@ const AddCategory = () => {
                     <Image source={{ uri: image }} style={styles.previewImage} />
                   ) : (
                     <View style={styles.placeholderContainer}>
-                      <Ionicons name="image-outline" size={40} color={COLORS.card} />
+                      <Ionicons name="image-outline" size={40} color={COLORS.primary} />
                       <Text style={styles.placeholderText}>
                         Tap to select image
                       </Text>
@@ -183,7 +183,7 @@ const AddCategory = () => {
                       color={COLORS.white}
                       style={styles.buttonIcon}
                     />
-                    <Text style={styles.buttonText}>Share</Text>
+                    <Text style={styles.buttonText}>Add Category</Text>
                   </>
                 )}
               </TouchableOpacity>
