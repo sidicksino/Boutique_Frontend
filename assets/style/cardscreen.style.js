@@ -13,7 +13,8 @@ export const getStyles = (COLORS) => StyleSheet.create({
     //   },
       list: {
         paddingHorizontal: 15,
-        paddingBottom: 80,
+        paddingBottom: 190,
+
       },
       item: {
         flexDirection: "row",
@@ -42,13 +43,14 @@ export const getStyles = (COLORS) => StyleSheet.create({
       },
       footer: {
         position: "absolute",
-        bottom: 90,
+        bottom: 0,
         left: 0,
         right: 0,
         backgroundColor: COLORS.background,
         padding: 15,
         borderTopWidth: 1,
         borderColor: COLORS.primary,
+        paddingBottom: "25%"
       },
       totalText: {
         fontSize: 18,

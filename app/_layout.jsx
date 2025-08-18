@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack, usePathname, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useContext, useEffect, useState } from "react";
+import Toast, { BaseToast } from "react-native-toast-message";
 import { CartProvider } from "../context/CartContext";
 import { ThemeContext, ThemeProvider } from "../context/ThemeContext";
 
@@ -31,6 +32,29 @@ function LayoutContent() {
 
   if (isAuthLoading) return null;
 
+
+  // Config global
+const toastConfig = {
+  success: ({ text1, text2, ...rest }) => (
+    <BaseToast
+      {...rest}
+      style={{ borderLeftColor: "#4CAF50", backgroundColor: "#4CAF50" }}
+      contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "white",
+      }}
+      text2Style={{
+        fontSize: 14,
+        color: "white",
+      }}
+      text1={text1}
+      text2={text2}
+    />
+  ),
+};
+
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
@@ -44,6 +68,7 @@ function LayoutContent() {
         />
       </Stack>
       <StatusBar style={isDarkMode ? "light" : "dark"} />
+      <Toast config={toastConfig} />
     </>
   );
 }

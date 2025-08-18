@@ -34,7 +34,10 @@ const CardScreen = () => {
   };
 
   const handleRemoveItem = (productId) => {
-    removeFromCart(productId);
+    Alert.alert("Delete Product", "Are you sure ?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Yes", onPress: () => removeFromCart(productId) },
+    ]);
   };
 
   if (isLoading) {
@@ -65,9 +68,9 @@ const CardScreen = () => {
                 />
                 <View style={styles.details}>
                   <Text style={styles.name}>{item.product.name}</Text>
-                  <Text style={styles.info}>Qté: {item.quantity}</Text>
+                  <Text style={styles.info}>Quantity: {item.quantity}</Text>
                   <Text style={styles.info}>
-                    Prix: ${item.product.price * item.quantity}
+                    Price: {item.product.price * item.quantity} FCFA
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -81,20 +84,20 @@ const CardScreen = () => {
 
           <View style={styles.footer}>
             <Text style={styles.totalText}>
-              Total: ${totalPrice.toFixed(2)}
+              Total: {totalPrice.toFixed(2)} FCFA
             </Text>
             <View style={styles.actions}>
               <TouchableOpacity
                 style={[styles.button, styles.clearButton]}
                 onPress={handleClearCart}
               >
-                <Text style={styles.buttonText}>Vider le panier</Text>
+                <Text style={styles.buttonText}>Empty Cart</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.checkoutButton]}
                 onPress={() => alert("Checkout non implémenté")}
               >
-                <Text style={styles.buttonText}>Commander</Text>
+                <Text style={styles.buttonText}>Checkout</Text>
               </TouchableOpacity>
             </View>
           </View>

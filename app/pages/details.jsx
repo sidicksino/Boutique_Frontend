@@ -5,13 +5,13 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useContext, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { useCart } from "../../context/CartContext";
 
 const DetailsScreen = () => {
-
   const { COLORS } = useContext(ThemeContext);
   const styles = getStyles(COLORS);
-  
+
   const { product } = useLocalSearchParams();
   const navigation = useNavigation();
   const [quantity, setQuantity] = useState(1);
@@ -21,8 +21,16 @@ const DetailsScreen = () => {
     typeof product === "string" ? JSON.parse(product) : product;
 
   const handleAddToCart = () => {
-    addToCart(parsedProduct, quantity); // ajoute au contexte
-    alert(`Ajouté ${quantity} au panier`);
+    addToCart(parsedProduct, quantity);
+
+    Toast.show({
+      type: "success",
+      text1: "Product added",
+      text2: `${quantity} item(s) added to cart`,
+      position: "top",
+      visibilityTime: 2000,
+      topOffset: 50,
+    });
   };
 
   const increaseQuantity = () => {

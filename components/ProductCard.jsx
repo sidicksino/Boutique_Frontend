@@ -4,11 +4,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { getStyles } from "../assets/style/produit.styles";
 
 const ProductCard = ({ product, onToggle }) => {
-  const { COLORS } = useContext(ThemeContext); // récupère le thème actuel
-  const styles = getStyles(COLORS); // crée les styles dynamiques
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
   const navigation = useNavigation();
   const [isLiked, setIsLiked] = useState(false);
 
@@ -76,6 +77,16 @@ const ProductCard = ({ product, onToggle }) => {
         }
 
         setIsLiked(false);
+
+        Toast.show({
+          type: "success",
+          text1: "Removed from favorites",
+          text2: `${product.name} was removed`,
+          position: "top",
+          visibilityTime: 2000,
+          topOffset: 50,
+        });
+
       } else {
         const res = await fetch(
           `https://boutique-backend-47jo.onrender.com/api/favorites`,
@@ -93,10 +104,26 @@ const ProductCard = ({ product, onToggle }) => {
           return;
         }
         setIsLiked(true);
+        Toast.show({
+          type: "success",
+          text1: "Added to favorites",
+          text2: `${product.name} was added`,
+          position: "top",
+          visibilityTime: 2000,
+          topOffset: 50,
+        });
       }
       if (onToggle) onToggle();
     } catch (err) {
       console.error(" Erreur dans toggleLike:", err);
+      Toast.show({
+        type: "error",
+        text1: "Something went wrong",
+        text2: "Please try again later",
+        position: "top",
+        visibilityTime: 2000,
+        topOffset: 50,
+      });
     }
   };
 
