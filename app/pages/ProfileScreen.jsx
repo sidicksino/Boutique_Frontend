@@ -14,14 +14,13 @@ import LottieView from "lottie-react-native";
 import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
-  BackHandler,
   Image,
   Modal,
   ScrollView,
   Switch,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 
@@ -98,20 +97,6 @@ const ProfileScreen = () => {
       },
     ]);
   };  
-
-  // Bloquer le bouton back si user est déconnecté
-  useEffect(() => {
-    const backAction = () => {
-      return true; // bloque le retour
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, []);
 
   const handleChangeLanguage = () => {
     Alert.alert("Language", "Select your preferred language");
