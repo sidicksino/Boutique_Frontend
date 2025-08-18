@@ -1,8 +1,8 @@
-import { styles } from "@/assets/style/auth.styles";
+import { getStyles } from "@/assets/style/auth.styles";
 import { API_URL } from "@/constants/api";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -11,8 +11,12 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const SignUpScreen = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   const router = useRouter();
 
   const [emailAddress, setEmailAddress] = useState("");

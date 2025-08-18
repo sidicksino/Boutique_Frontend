@@ -1,11 +1,14 @@
-import { styles } from "@/assets/style/welcom.styles";
+import { getStyles } from "@/assets/style/welcom.styles";
+import { ThemeContext } from "@/context/ThemeContext";
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from "react";
+import React, { useContext } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { COLORS } from "../../constants/colors";
 
 const Onboarding = () => {
+  const { COLORS } = useContext(ThemeContext); // récupère le thème actuel
+  const styles = getStyles(COLORS); // crée les styles dynamiques
+
   const router = useRouter();
 
   const onSignPhonePress = () => {

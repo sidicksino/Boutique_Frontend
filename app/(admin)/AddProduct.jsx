@@ -1,12 +1,12 @@
-import styles from "@/assets/style/addProduct.style";
+import getStyles from "@/assets/style/addProduct.style";
 import SafeScreen from "@/components/SafeScreen";
-import { COLORS } from "@/constants/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { router, useNavigation } from "expo-router";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -19,8 +19,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const AddProduct = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
   const navigation = useNavigation();
 
   const [name, setName] = useState("");
@@ -100,6 +103,11 @@ const AddProduct = () => {
     }
 
     try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        router.replace("/auth/loginScreen");
+        return;
+      }
       setLoading(true);
 
       const uriParts = image.split(".");
@@ -115,6 +123,7 @@ const AddProduct = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify({
             name,

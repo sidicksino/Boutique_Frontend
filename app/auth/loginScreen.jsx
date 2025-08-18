@@ -1,10 +1,10 @@
-import { styles } from "@/assets/style/auth.styles";
+import { getStyles } from "@/assets/style/auth.styles";
 import { API_URL } from "@/constants/api";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -13,8 +13,11 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const LoginScreen = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
   const router = useRouter();
 
   const [emailOrPhone, setEmailOrPhone] = useState("");

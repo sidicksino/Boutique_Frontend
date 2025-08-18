@@ -1,9 +1,7 @@
-// styles/home.styles.js
 import { Dimensions, StyleSheet } from "react-native";
-import { COLORS } from "../../constants/colors";
 const { width } = Dimensions.get("window");
 
-export const styles = StyleSheet.create({
+export const getStyles = (COLORS) => StyleSheet.create({
     cardContenair:{
         flex: 1,
         backgroundColor: COLORS.background,
@@ -58,15 +56,15 @@ export const styles = StyleSheet.create({
         shadowColor: COLORS.shadow,
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        left: 130,
+        left: width / 2 - 70,
         bottom: 150,
     },
     /// produits categories 
     cardCategorie: {
-        width: 170,
+        width: 120,
         backgroundColor: COLORS.card,
         borderRadius: 16,
-        margin: 10,
+        margin: 5,
         shadowColor: COLORS.shadow,
         shadowOpacity: 0.1,
         shadowRadius: 8,
@@ -74,6 +72,7 @@ export const styles = StyleSheet.create({
     },
     imageCategorie: {
         width: "100%",
-        height: 130,
+        height: 120,
+        resizeMode: "cover",
     },
 });

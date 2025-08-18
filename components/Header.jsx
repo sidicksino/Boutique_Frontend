@@ -1,33 +1,40 @@
-import { styles } from '@/assets/style/home.style';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-
+import { getStyles } from "@/assets/style/home.style";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useContext } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Header = () => {
-
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
   const router = useRouter();
 
   const profilePress = () => {
-    router.push('pages/ProfileScreen')
+    router.push("pages/ProfileScreen");
   };
-    return (
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Text style={styles.headerTitle}>Sino</Text>
-        </View>
-        <View style={styles.headerRight}>
+
+  const reasherPress = () => {
+    router.push("pages/RechercheScreen");
+  };
+  return (
+    <View style={styles.header}>
+      <View style={styles.headerLeft}>
+        <Text style={styles.headerTitle}>Sino</Text>
+      </View>
+      <View style={styles.headerRight}>
+        <TouchableOpacity onPress={reasherPress}>
           <Ionicons name="search-outline" style={styles.headerIcon} />
-          <TouchableOpacity onPress={profilePress} style={styles.logoSocial}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={profilePress} style={styles.logoSocial}>
           <Image
-            source={ require('../assets/images/avatar.jpeg') }
+            source={require("../assets/images/avatar.jpeg")}
             style={styles.headerLogo}
           />
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
       </View>
-    );
-  };
-  
-  export default Header;
+    </View>
+  );
+};
+
+export default Header;

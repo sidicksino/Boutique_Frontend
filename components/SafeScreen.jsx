@@ -1,9 +1,10 @@
+import { ThemeContext } from "@/context/ThemeContext";
+import React, { useContext } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { COLORS } from "@/constants/colors";
-
 const SafeScreen = ({ children }) => {
+  const { COLORS } = useContext(ThemeContext);
   const insets = useSafeAreaInsets();
 
   return (

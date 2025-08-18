@@ -1,10 +1,8 @@
-// styles/auth.styles.js
 import { Dimensions, StyleSheet } from "react-native";
-import { COLORS } from "../../constants/colors";
 
 const { width } = Dimensions.get("window");
 
-export const styles = StyleSheet.create({
+export const getStyles = (COLORS) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,

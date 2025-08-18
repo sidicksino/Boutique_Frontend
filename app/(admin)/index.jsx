@@ -1,11 +1,10 @@
-import { styles } from "@/assets/style/admin.style";
+import { getStyles } from "@/assets/style/admin.style";
 import HeaderCategory from "@/components/HeaderCategoryDetail";
 import SafeScreen from "@/components/SafeScreen";
-import { COLORS } from "@/constants/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import LottieView from 'lottie-react-native';
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -14,8 +13,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const CategorieAdmin = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);

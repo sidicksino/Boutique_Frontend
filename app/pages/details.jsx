@@ -1,13 +1,17 @@
-import { styles } from "@/assets/style/datail.style";
+import { getStyles } from "@/assets/style/datail.style";
 import SafeScreen from "@/components/SafeScreen";
-import { COLORS } from "@/constants/colors";
+import { ThemeContext } from "@/context/ThemeContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useCart } from "../../context/CartContext";
 
 const DetailsScreen = () => {
+
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   const { product } = useLocalSearchParams();
   const navigation = useNavigation();
   const [quantity, setQuantity] = useState(1);

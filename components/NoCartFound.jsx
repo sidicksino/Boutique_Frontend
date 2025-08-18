@@ -1,9 +1,13 @@
-import { styles } from "@/assets/style/noFound.style";
+import { getStyles } from "@/assets/style/noFound.style";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import React, { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
 
 const NoCartFound = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
   const router = useRouter();
 
   return (

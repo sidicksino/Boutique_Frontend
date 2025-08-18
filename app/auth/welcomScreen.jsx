@@ -1,12 +1,16 @@
-import { styles } from "@/assets/style/welcom.styles";
+import { getStyles } from "@/assets/style/welcom.styles";
+import { ThemeContext } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import { MotiText, MotiView } from "moti";
-import React from "react";
+import React, { useContext } from "react";
 import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 
 const { width } = Dimensions.get("window");
 
 const WelcomeScreen = () => {
+  const { COLORS } = useContext(ThemeContext); // récupère le thème actuel
+  const styles = getStyles(COLORS); // crée les styles dynamiques
+
   const router = useRouter();
 
   return (

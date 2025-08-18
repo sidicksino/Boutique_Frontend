@@ -1,9 +1,14 @@
+import { ThemeContext } from "@/context/ThemeContext";
 import { useNavigation } from "expo-router";
-import React from "react";
+import React, { useContext } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
-import { styles } from "../assets/style/produit.styles";
+import { getStyles } from "../assets/style/produit.styles";
 
 const ProductCardCategorie = ({ product }) => {
+
+  const { COLORS } = useContext(ThemeContext); // récupère le thème actuel
+  const styles = getStyles(COLORS); // crée les styles dynamiques
+
   const navigation = useNavigation();
 
   return (

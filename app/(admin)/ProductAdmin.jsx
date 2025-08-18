@@ -1,11 +1,11 @@
-import { styles } from "@/assets/style/admin.style";
+import { getStyles } from "@/assets/style/admin.style";
 import HeaderCategory from "@/components/HeaderCategoryDetail";
 import SafeScreen from "@/components/SafeScreen";
-import { COLORS } from "@/constants/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useNavigation } from "expo-router";
 import LottieView from "lottie-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -14,9 +14,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { ThemeContext } from "../../context/ThemeContext";
+
 
 const ProductAdmin = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
   const navigation = useNavigation();
+  
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
   const [byCategory, setByCategory] = useState([]);
@@ -26,9 +31,22 @@ const ProductAdmin = () => {
   // Fetch Products from backend
   const fetchProducts = async () => {
     try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        router.replace("/auth/loginScreen");
+        return;
+      }
       const res = await fetch(
-        "https://boutique-backend-47jo.onrender.com/api/products/all"
+        "https://boutique-backend-47jo.onrender.com/api/products/all",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }
       );
+      
       const data = await res.json();
 
       setProducts(data.products ?? []);
@@ -58,10 +76,22 @@ const ProductAdmin = () => {
           style: "destructive",
           onPress: async () => {
             try {
+              const token = await AsyncStorage.getItem("userToken");
+              if (!token) {
+                router.replace("/auth/loginScreen");
+                return;
+              }
               const res = await fetch(
                 `https://boutique-backend-47jo.onrender.com/api/products/${id}`,
-                { method: "DELETE" }
+                {
+                  method: "DELETE",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                  },
+                }
               );
+              
               const result = await res.json();
               if (result.success) {
                 Alert.alert("Success", "Product deleted");

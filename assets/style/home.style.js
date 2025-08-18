@@ -1,8 +1,6 @@
-// styles/home.styles.js
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../constants/colors";
 
-export const styles = StyleSheet.create({
+export const getStyles = (COLORS) => StyleSheet.create({
     // style back button
     backButton:{
         position: "relative",
@@ -128,6 +126,12 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
+    },
+    headerTop:{
+        backgroundColor: COLORS.background,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        marginTop: -20,
     },
     addButtonText: {
         color: COLORS.white,

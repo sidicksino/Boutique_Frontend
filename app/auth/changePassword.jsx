@@ -1,11 +1,10 @@
-import { styles } from "@/assets/style/auth.styles";
+import { getStyles } from "@/assets/style/auth.styles";
 import { API_URL } from "@/constants/api";
-import { COLORS } from "@/constants/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -14,8 +13,13 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ThemeContext } from "../../context/ThemeContext";
+
 
 const ChangePassword = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewpassword, setConfirmNewpassword] = useState("");

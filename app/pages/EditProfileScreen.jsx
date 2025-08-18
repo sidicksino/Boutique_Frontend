@@ -1,10 +1,9 @@
-import { styles } from "@/assets/style/editProfil.style";
+import { getStyles } from "@/assets/style/editProfil.style";
 import SafeScreen from "@/components/SafeScreen";
-import { COLORS } from "@/constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -15,8 +14,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const EditProfileScreen = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   const navigation = useNavigation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);

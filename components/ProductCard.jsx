@@ -1,12 +1,14 @@
-import { COLORS } from "@/constants/colors";
+import { ThemeContext } from "@/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { styles } from "../assets/style/produit.styles";
+import { getStyles } from "../assets/style/produit.styles";
 
 const ProductCard = ({ product, onToggle }) => {
+  const { COLORS } = useContext(ThemeContext); // récupère le thème actuel
+  const styles = getStyles(COLORS); // crée les styles dynamiques
   const navigation = useNavigation();
   const [isLiked, setIsLiked] = useState(false);
 

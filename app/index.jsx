@@ -1,11 +1,16 @@
-import { styles } from "@/assets/style/home.style";
+import { getStyles } from "@/assets/style/home.style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { jwtDecode } from "jwt-decode";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Image, View } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function Index() {
+
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   useEffect(() => {
     const checkUser = async () => {
       const token = await AsyncStorage.getItem("userToken");

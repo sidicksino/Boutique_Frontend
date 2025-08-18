@@ -1,8 +1,13 @@
-import { styles } from "@/assets/style/noFound.style";
+import { getStyles } from "@/assets/style/noFound.style";
 import { Ionicons } from "@expo/vector-icons";
+import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
 
 const NoOrderFound = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   return (
     <View style={styles.container}>
       <Ionicons name="receipt-outline" size={200} style={styles.noFoundIcon} />

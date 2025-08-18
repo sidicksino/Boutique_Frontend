@@ -1,7 +1,7 @@
-import { styles } from "@/assets/style/profil.style";
+import { getStyles } from "@/assets/style/profil.style";
 import SafeScreen from "@/components/SafeScreen";
-import { COLORS } from "@/constants/colors";
 import { useCart } from "@/context/CartContext";
+import { ThemeContext } from "@/context/ThemeContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -10,21 +10,25 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { router, useNavigation } from "expo-router";
-import LottieView from 'lottie-react-native';
-import React, { useEffect, useState } from "react";
+import LottieView from "lottie-react-native";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
+  BackHandler,
   Image,
   Modal,
   ScrollView,
   Switch,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
+
 const ProfileScreen = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { COLORS, isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+
   const [language, setLanguage] = useState("English");
   const navigation = useNavigation();
 
@@ -81,8 +85,6 @@ const ProfileScreen = () => {
     fetchUser();
   }, []);
 
-  const toggleSwitch = () => setIsDarkMode((prev) => !prev);
-
   const handleLogout = () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
       { text: "Cancel", style: "cancel" },
@@ -91,11 +93,25 @@ const ProfileScreen = () => {
         onPress: async () => {
           await AsyncStorage.removeItem("userToken");
           logout();
-          router.replace("/auth/welcomScreen");
+            router.replace("/auth/welcomScreen");
         },
       },
     ]);
-  };
+  };  
+
+  // Bloquer le bouton back si user est déconnecté
+  useEffect(() => {
+    const backAction = () => {
+      return true; // bloque le retour
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   const handleChangeLanguage = () => {
     Alert.alert("Language", "Select your preferred language");
@@ -112,20 +128,13 @@ const ProfileScreen = () => {
         allowsEditing: true,
         aspect: [1, 1],
         quality: 1,
+        base64: true, // important pour récupérer le base64
       });
 
       if (!result.canceled) {
-        const uri = result.assets[0].uri;
-        setProfilePhoto(uri);
+        const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
 
         const token = await AsyncStorage.getItem("userToken");
-
-        const formData = new FormData();
-        formData.append("file", {
-          uri,
-          name: "profile.jpg",
-          type: "image/jpeg",
-        });
 
         const uploadRes = await fetch(
           "https://boutique-backend-47jo.onrender.com/api/upload",
@@ -133,9 +142,11 @@ const ProfileScreen = () => {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
+              "Content-Type": "application/json",
             },
-            body: formData,
+            body: JSON.stringify({
+              profile_photo: base64Image, // envoi du base64
+            }),
           }
         );
 
@@ -145,28 +156,8 @@ const ProfileScreen = () => {
           throw new Error("Upload failed");
         }
 
-        const updateRes = await fetch(
-          "https://boutique-backend-47jo.onrender.com/api/me/updateProfile",
-          {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              profile_photo: uploadData.url,
-            }),
-          }
-        );
-
-        const updateData = await updateRes.json();
-
-        if (updateRes.ok) {
-          Alert.alert("Success", "Photo updated!");
-          setProfilePhoto(uploadData.url);
-        } else {
-          throw new Error(updateData?.error || "Update failed");
-        }
+        Alert.alert("Success", "Photo updated!");
+        setProfilePhoto(uploadData.url); // affiche directement la photo cloudinary
       }
     } catch (error) {
       console.error(" Upload error:", error.message);
@@ -177,9 +168,11 @@ const ProfileScreen = () => {
   if (loading) {
     return (
       <SafeScreen>
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <LottieView
-            source={require('../../assets/images/loading.json')}
+            source={require("../../assets/images/loading.json")}
             autoPlay
             loop
             style={{ width: 150, height: 150 }}
@@ -194,91 +187,89 @@ const ProfileScreen = () => {
 
   return (
     <SafeScreen>
-      <ScrollView style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
-            <AntDesign name="left" size={24} color={COLORS.text} />
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <AntDesign name="left" size={24} color={COLORS.text} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Profile</Text>
+        <TouchableOpacity
+          onPress={() => router.push("/pages/EditProfileScreen")}
+        >
+          <Text style={styles.editText}>Edit</Text>
+        </TouchableOpacity>
+      </View>
+      {/* Profile */}
+      <View style={styles.profileSection}>
+        <View style={styles.avatarContainer}>
+          {/* Image cliquable pour afficher en grand */}
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Image
+              source={
+                profilePhoto
+                  ? { uri: profilePhoto }
+                  : require("../../assets/images/avatar.jpeg")
+              }
+              style={styles.avatar}
+            />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Profile</Text>
           <TouchableOpacity
-            onPress={() => router.push("/pages/EditProfileScreen")}
+            style={styles.editIcon}
+            onPress={pickImageAndUpload}
           >
-            <Text style={styles.editText}>Edit</Text>
+            <MaterialCommunityIcons
+              name="camera-plus-outline"
+              size={24}
+              color={COLORS.primary}
+            />
           </TouchableOpacity>
-        </View>
 
-        {/* Profile */}
-        <View style={styles.profileSection}>
-          <View style={styles.avatarContainer}>
-            {/* Image cliquable pour afficher en grand */}
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-              <Image
-                source={
-                  profilePhoto
-                    ? { uri: profilePhoto }
-                    : require("../../assets/images/avatar.jpeg")
-                }
-                style={styles.avatar}
+          {/* Modal corrigé */}
+          <Modal
+            visible={modalVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={styles.modalContainer}>
+              {/* Fond sombre cliquable pour fermer modal */}
+              <TouchableOpacity
+                style={styles.modalOverlay}
+                activeOpacity={1}
+                onPress={() => setModalVisible(false)}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.editIcon}
-              onPress={pickImageAndUpload}
-            >
-              <MaterialCommunityIcons
-                name="camera-plus-outline"
-                size={24}
-                color={COLORS.primary}
-              />
-            </TouchableOpacity>
 
-            {/* Modal corrigé */}
-            <Modal
-              visible={modalVisible}
-              transparent
-              animationType="fade"
-              onRequestClose={() => setModalVisible(false)}
-            >
-              <View style={styles.modalContainer}>
-                {/* Fond sombre cliquable pour fermer modal */}
-                <TouchableOpacity
-                  style={styles.modalOverlay}
-                  activeOpacity={1}
-                  onPress={() => setModalVisible(false)}
+              {/* Contenu du modal (image et bouton fermeture) */}
+              <View style={styles.modalContent}>
+                <Image
+                  source={
+                    profilePhoto
+                      ? { uri: profilePhoto }
+                      : require("../../assets/images/avatar.jpeg")
+                  }
+                  style={styles.fullImage}
+                  resizeMode="contain"
                 />
 
-                {/* Contenu du modal (image et bouton fermeture) */}
-                <View style={styles.modalContent}>
-                  <Image
-                    source={
-                      profilePhoto
-                        ? { uri: profilePhoto }
-                        : require("../../assets/images/avatar.jpeg")
-                    }
-                    style={styles.fullImage}
-                    resizeMode="contain"
-                  />
-
-                  <TouchableOpacity
-                    style={styles.closeButton}
-                    onPress={() => setModalVisible(false)}
-                  >
-                    <AntDesign name="close" size={24} color="white" />
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <AntDesign name="close" size={24} color="white" />
+                </TouchableOpacity>
               </View>
-            </Modal>
-          </View>
-          <Text style={styles.name}>{user?.name || "No name available"}</Text>
-          <Text style={styles.profession}>
-            {user?.role === "Admin" ? "Administrator" : "Client"}
-          </Text>
+            </View>
+          </Modal>
         </View>
+        <Text style={styles.profession}>
+          {user?.role === "Admin" ? "Administrator" : "Client"}
+        </Text>
+      </View>
 
+      <ScrollView style={styles.container}>
         {/* Info */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Personal Information</Text>
@@ -312,6 +303,20 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             )}
           </View>
+
+          {/* User name */}
+          <View style={styles.infoItem}>
+            <Feather name="user" size={24} color={COLORS.primary} />
+            <View style={styles.infoTextContainer}>
+              <Text style={styles.infoLabel}>Name</Text>
+              <Text style={styles.infoValue}>
+                {user?.name || "No name available"}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={() => router.push("/auth/editPhone")}>
+              <Feather name="edit-2" size={18} color={COLORS.primary} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Settings */}
@@ -332,7 +337,7 @@ const ProfileScreen = () => {
             <Switch
               trackColor={{ false: COLORS.expense, true: COLORS.primary }}
               thumbColor={COLORS.white}
-              onValueChange={toggleSwitch}
+              onValueChange={toggleTheme}
               value={isDarkMode}
             />
           </View>
@@ -355,7 +360,10 @@ const ProfileScreen = () => {
         </View>
 
         {user?.role === "Admin" && (
-          <TouchableOpacity style={styles.logoutButton} onPress={() => router.push("/(admin)")}>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={() => router.push("/(admin)")}
+          >
             <Text style={styles.adminText}>Access to your dashboard</Text>
           </TouchableOpacity>
         )}

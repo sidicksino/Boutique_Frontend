@@ -1,10 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack, usePathname, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CartProvider } from "../context/CartContext";
+import { ThemeContext, ThemeProvider } from "../context/ThemeContext";
 
-export default function RootLayout() {
+function LayoutContent() {
+  const { isDarkMode } = useContext(ThemeContext); // ici c'est OK
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const pathname = usePathname();
@@ -30,15 +32,28 @@ export default function RootLayout() {
   if (isAuthLoading) return null;
 
   return (
-    <CartProvider>
-
+    <>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="auth" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(admin)" />
+        <Stack.Screen
+          name="pages/RechercheScreen"
+          options={{ title: "Recherche" }}
+        />
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style={isDarkMode ? "light" : "dark"} />
+    </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <CartProvider>
+        <LayoutContent />
       </CartProvider>
+    </ThemeProvider>
   );
 }

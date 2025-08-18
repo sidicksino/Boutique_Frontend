@@ -1,12 +1,20 @@
-import { styles } from "@/assets/style/home.style";
+import { getStyles } from "@/assets/style/home.style";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import ProductCardCategorie from "@/components/ProductCategories";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ResizeMode, Video } from "expo-av";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { router } from "expo-router";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, RefreshControl, Text, View } from "react-native";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const HomeScreen = () => {
+
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+
+  
   const video = useRef(null);
 
   const [products, setProducts] = useState([]);
@@ -31,7 +39,21 @@ const HomeScreen = () => {
   // Fonction pour charger les produits
   const fetchProducts = async () => {
     try {
-      const res = await fetch("https://boutique-backend-47jo.onrender.com/api/products");
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        router.replace("/auth/loginScreen");
+        return;
+      }
+      const res = await fetch(
+        "https://boutique-backend-47jo.onrender.com/api/products",
+        {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await res.json();
       setProducts(data);
     } catch (error) {
@@ -63,6 +85,7 @@ const HomeScreen = () => {
         isLooping
         isMuted
       />
+      <View style={styles.headerTop}>
       <Text style={styles.productTitle}>Product Categories</Text>
 
       {loadingCategories ? (
@@ -79,6 +102,7 @@ const HomeScreen = () => {
       )}
 
       <Text style={styles.productTitle}>Our Products</Text>
+    </View>
     </View>
   );
 

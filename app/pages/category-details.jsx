@@ -1,11 +1,12 @@
-import { styles } from "@/assets/style/datail.style";
+import { getStyles } from "@/assets/style/datail.style";
 import HeaderCategory from "@/components/HeaderCategoryDetail";
 import ProductCard from "@/components/ProductCard";
 import SafeScreen from "@/components/SafeScreen";
-import { COLORS } from "@/constants/colors";
+import { ThemeContext } from "@/context/ThemeContext";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -15,8 +16,10 @@ import {
   View,
 } from "react-native";
 
-
 const CategoryDetails = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   const { categoryId, categoryName, categoryImage } = useLocalSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,8 +28,20 @@ const CategoryDetails = () => {
 
   const fetchProducts = async () => {
     try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        router.replace("/auth/loginScreen");
+        return;
+      }
       const res = await fetch(
-        `https://boutique-backend-47jo.onrender.com/api/categories/${categoryId}/products`
+        `https://boutique-backend-47jo.onrender.com/api/categories/${categoryId}/products`,
+        {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
       const data = await res.json();
       setProducts(data);

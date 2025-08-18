@@ -1,35 +1,36 @@
-// styles/profil.style.js
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../constants/colors";
 
-export const styles = StyleSheet.create({
+export const getStyles = (COLORS) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
     paddingHorizontal: 20,
   },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: "600",
     color: COLORS.text,
-    marginLeft: 0
   },
   backButton: {
     padding: 8,
   },
-  editText:{
+  editText: {
     color: COLORS.primary,
     fontSize: 16,
     fontWeight: "500",
     padding: 8,
   },
-  adminText:{
+  adminText: {
     color: COLORS.primary,
     fontSize: 16,
     fontWeight: "500",
@@ -148,7 +149,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 3,
-    
+
   },
   logoutText: {
     color: COLORS.expense,
@@ -160,12 +161,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
+
   modalOverlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.8)',
   },
-  
+
   modalContent: {
     zIndex: 2,
     width: '90%',
@@ -173,13 +174,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
+
   fullImage: {
     width: '100%',
     height: '100%',
     borderRadius: 10,
   },
-  
+
   closeButton: {
     position: 'absolute',
     top: -40, // Au-dessus de l'image

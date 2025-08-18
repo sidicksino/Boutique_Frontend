@@ -1,12 +1,15 @@
-import { COLORS } from "@/constants/colors";
+import { ThemeContext } from "@/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
-import { styles } from "../assets/style/produit.styles";
+import { getStyles } from "../assets/style/produit.styles";
 
 const FavoriteCard = ({ product, onToggle }) => {
+
+  const { COLORS } = useContext(ThemeContext); // récupère le thème actuel
+  const styles = getStyles(COLORS); // crée les styles dynamiques
   const navigation = useNavigation();
   const [isProcessing, setIsProcessing] = useState(false);
 

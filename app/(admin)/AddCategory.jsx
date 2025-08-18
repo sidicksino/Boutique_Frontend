@@ -1,12 +1,11 @@
-import styles from "@/assets/style/addCategory.style";
+import getStyles from "@/assets/style/addCategory.style";
 import SafeScreen from "@/components/SafeScreen";
-import { COLORS } from "@/constants/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "expo-router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -19,8 +18,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const AddCategory = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
   const navigation = useNavigation();
 
   const [name, setName] = useState("");

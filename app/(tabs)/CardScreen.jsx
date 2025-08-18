@@ -1,10 +1,10 @@
 // Fichier: screens/CardScreen.js
-import { styles } from "@/assets/style/cardscreen.style";
+import { getStyles } from "@/assets/style/cardscreen.style";
 import Header from "@/components/Header";
 import NoCartFound from "@/components/NoCartFound";
 import { useCart } from "@/context/CartContext";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useContext } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -14,8 +14,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const CardScreen = () => {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
   const { cartItems, clearCart, removeFromCart, isLoading } = useCart();
 
   const totalPrice = cartItems.reduce(

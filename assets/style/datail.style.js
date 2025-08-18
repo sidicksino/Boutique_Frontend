@@ -1,8 +1,6 @@
-// styles/auth.styles.js
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../constants/colors";
 
-export const styles = StyleSheet.create({
+export const getStyles = (COLORS) => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.background,
@@ -18,8 +16,8 @@ export const styles = StyleSheet.create({
     },
     backButton: {
         position: "absolute",
-        top: 50,
-        left: 25,
+        top: 30,
+        left: 15,
         backgroundColor: 'rgba(0,0,0,0.3)',
         borderRadius: 20,
         padding: 10,

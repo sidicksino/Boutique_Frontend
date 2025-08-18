@@ -1,11 +1,15 @@
-import { styles } from "@/assets/style/home.style";
+import { getStyles } from "@/assets/style/home.style";
 import { Ionicons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation, useRouter } from "expo-router";
-import React from "react";
+import React, { useContext } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
+import { ThemeContext } from "../context/ThemeContext";
 
 const HeaderCategory = () => {
+
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
   const router = useRouter();
   const navigation = useNavigation();
 

@@ -1,13 +1,18 @@
-import { styles } from "@/assets/style/home.style";
+import { getStyles } from "@/assets/style/home.style";
 import FavoriteCard from "@/components/FavoriteCard";
 import Header from "@/components/Header";
 import NoFavoriteFound from "@/components/NoFavoriteFound";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useState } from "react";
+import { router } from "expo-router";
+import React, { useCallback, useContext, useState } from "react";
 import { FlatList, RefreshControl, View } from "react-native";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function FavoriteScreen() {
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   const [favorites, setFavorites] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -15,8 +20,7 @@ export default function FavoriteScreen() {
     try {
       const token = await AsyncStorage.getItem("userToken");
       if (!token) {
-        console.warn(" Aucun token trouvé");
-        setFavorites([]);
+        router.replace("/auth/loginScreen");
         return;
       }
 

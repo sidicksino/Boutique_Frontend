@@ -1,10 +1,15 @@
-import { styles } from "@/assets/style/auth.styles";
+import { getStyles } from "@/assets/style/auth.styles";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const VerifyCode = () => {
+
+  const { COLORS } = useContext(ThemeContext);
+  const styles = getStyles(COLORS);
+  
   const router = useRouter();
   const { emailOrPhone } = useLocalSearchParams();
 
