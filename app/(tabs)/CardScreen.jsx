@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import NoCartFound from "@/components/NoCartFound";
 import { useCart } from "@/context/CartContext";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useContext } from "react";
 import {
   ActivityIndicator,
@@ -94,7 +95,7 @@ const CardScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.checkoutButton]}
-                onPress={() => alert("Checkout non implémenté")}
+                onPress={() => router.push("/pages/CheckoutScreen")}
               >
                 <Text style={styles.buttonText}>Checkout</Text>
               </TouchableOpacity>

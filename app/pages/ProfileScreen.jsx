@@ -35,7 +35,7 @@ const ProfileScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const { logout } = useCart();
 
-  // ✅ Utilise useFocusEffect à la place de useEffect
+  // Utilise useFocusEffect à la place de useEffect
   useFocusEffect(
     useCallback(() => {
       const fetchUser = async () => {
@@ -46,7 +46,7 @@ const ProfileScreen = () => {
             return;
           }
 
-          // ✅ URL corrigée : pas d'espaces
+          // URL corrigée : pas d'espaces
           const response = await fetch("https://boutique-backend-47jo.onrender.com/api/me/getUser", {
             headers: {
               Authorization: `Bearer ${token}`,
