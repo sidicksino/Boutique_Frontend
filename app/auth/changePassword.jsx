@@ -2,37 +2,40 @@ import { getStyles } from "@/assets/style/auth.styles";
 import { API_URL } from "@/constants/api";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import React, { useContext, useState } from "react";
 import {
   ActivityIndicator,
+  Keyboard,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Toast from "react-native-toast-message";
 import { ThemeContext } from "../../context/ThemeContext";
-
 
 const ChangePassword = () => {
   const { COLORS } = useContext(ThemeContext);
   const styles = getStyles(COLORS);
-  
+
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [confirmNewpassword, setConfirmNewpassword] = useState("");
+  const [confirmNewpassword, setConfirmNewPassword] = useState(""); // Fixed naming
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmNewpassword, setShowConfirmNewpassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigation = useNavigation();
 
   const onChangePasswrdPress = async () => {
-    setError(""); // reset erreur
+    setError("");
     setLoading(true);
+    Keyboard.dismiss(); // Dismiss keyboard
 
     if (!password || !newPassword || !confirmNewpassword) {
       setError("Please fill all fields");
@@ -45,27 +48,54 @@ const ChangePassword = () => {
       return;
     }
 
+    if (newPassword.length < 6) {
+      setError("Password must be at least 6 characters long");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch(`${API_URL}/api/user/change-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password: password,
-          newPassword: newPassword,
-        }),
-      });
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        setError("Authentication token missing");
+        setLoading(false);
+        router.replace("/auth/loginScreen");
+        return;
+      }
+
+      const response = await fetch(
+        `${API_URL}/api/resetPassword/changePassword`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            password,
+            newPassword,
+            confirmNewpassword, // Fixed key name
+          }),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
-        // succès
-        setLoading(false);
-        alert("Password changed successfully!");
-        // Tu peux aussi rediriger, vider les champs, etc.
+        Toast.show({
+          type: "success",
+          text1: "Password updated",
+          text2: data.message,
+          position: "top",
+          visibilityTime: 2000,
+          topOffset: 50,
+        });
+
+        setTimeout(() => {
+          navigation.goBack();
+        }, 2000);
       } else {
-        setError(data.error || "Failed to change password");
+        setError(data.message || "Failed to change password");
       }
     } catch (error) {
       setError("An error occurred. Please try again.");
@@ -79,7 +109,11 @@ const ChangePassword = () => {
       style={styles.containers}
       contentContainerStyle={{ flexGrow: 1 }}
       enableOnAndroid={true}
-      enableAutomaticScroll={true}
+      extraHeight={200}
+      extraScrollHeight={100}
+      keyboardOpeningTime={0}
+      scrollEnabled={true}
+      behavior="padding" 
     >
       <TouchableOpacity
         onPress={() => navigation.goBack()}
@@ -144,15 +178,15 @@ const ChangePassword = () => {
             value={confirmNewpassword}
             placeholder="Confirm new password"
             placeholderTextColor="#9A8478"
-            secureTextEntry={!showConfirmNewpassword}
-            onChangeText={setConfirmNewpassword}
+            secureTextEntry={!showConfirmNewPassword}
+            onChangeText={setConfirmNewPassword}
           />
           <TouchableOpacity
             style={styles.eyeButton}
-            onPress={() => setShowConfirmNewpassword(!showConfirmNewpassword)}
+            onPress={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
           >
             <Ionicons
-              name={showConfirmNewpassword ? "eye-outline" : "eye-off-outline"}
+              name={showConfirmNewPassword ? "eye-outline" : "eye-off-outline"}
               size={24}
               color="#9A8478"
             />

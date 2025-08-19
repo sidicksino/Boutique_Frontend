@@ -24,7 +24,10 @@ const Header = () => {
     const fetchUser = async () => {
       try {
         const token = await AsyncStorage.getItem("userToken");
-        if (!token) return;
+        if (!token) {
+          router.replace("/auth/loginScreen");
+          return;
+        }
 
         const res = await fetch(
           "https://boutique-backend-47jo.onrender.com/api/me/getUser",
