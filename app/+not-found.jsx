@@ -1,21 +1,23 @@
-import { COLORS } from '@/constants/colors';
+import { ThemeContext } from "@/context/ThemeContext";
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function NotFoundScreen() {
+  const { COLORS } = useContext(ThemeContext);
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
       <Image
         source={require("../assets/images/logo1.png")}
         style={styles.image}
       />
-      <Text style={styles.title}>Oups! Page non trouvée</Text>
+      <Text style={[styles.title, { color: COLORS.text }]}>Oops! Page not found</Text>
       <Text style={styles.subtitle}>
-        Il semble que la page que vous recherchez n'existe pas.
+        It seems the page you are looking for does not exist.
       </Text>
-      <TouchableOpacity style={styles.button} onPress={() => router.replace('/(tabs)')}>
-        <Text style={styles.buttonText}>Retour à l'accueil</Text>
+      <TouchableOpacity style={[styles.button, { backgroundColor: COLORS.primary }]} onPress={() => router.replace('/(tabs)')}>
+        <Text style={styles.buttonText}>Back to Home</Text>
       </TouchableOpacity>
     </View>
   );
@@ -24,7 +26,6 @@ export default function NotFoundScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
@@ -37,7 +38,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: COLORS.text,
     marginBottom: 10,
   },
   subtitle: {
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   button: {
-    backgroundColor: COLORS.primary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 25,

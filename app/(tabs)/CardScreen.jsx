@@ -1,4 +1,3 @@
-// Fichier: screens/CardScreen.js
 import { getStyles } from "@/assets/style/cardscreen.style";
 import Header from "@/components/Header";
 import NoCartFound from "@/components/NoCartFound";
