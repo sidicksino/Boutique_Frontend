@@ -59,7 +59,7 @@ const Header = () => {
         <Text style={styles.headerTitle}>Sino</Text>
       </View>
       <View style={styles.headerRight}>
-        <TouchableOpacity onPress={reasherPress}>
+        <TouchableOpacity  style={styles.rechercher} onPress={reasherPress}>
           <Ionicons name="search-outline" style={styles.headerIcon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={profilePress} style={styles.logoSocial}>

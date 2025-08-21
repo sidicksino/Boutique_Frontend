@@ -109,6 +109,9 @@ export const getStyles = (COLORS) => StyleSheet.create({
         alignItems: "center",
         gap: 12,
     },
+    rechercher:{
+        paddingHorizontal: 0
+    },
     headerTitle: {
         fontSize: 28,
         fontWeight: "bold",

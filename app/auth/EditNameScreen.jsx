@@ -68,7 +68,7 @@ export default function EditNameScreen() {
         return router.replace("/auth/loginScreen");
       }
 
-      const response = await fetch(`${API_URL}/api/me/updateProfile`, {
+      const response = await fetch(`${API_URL}/api/me/updateName`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
