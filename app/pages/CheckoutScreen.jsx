@@ -8,8 +8,8 @@ import React, { useContext, useState } from "react";
 import {
   Alert,
   Dimensions,
+  Image,
   SafeAreaView,
-  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -42,6 +42,9 @@ export default function CheckoutScreen() {
     name: "",
   });
 
+  const [mobileInfo, setMobileInfo] = useState({
+    phoneNumber: "",
+  });
   // Méthode de paiement
   const [paymentMethod, setPaymentMethod] = useState("");
 
@@ -57,6 +60,12 @@ export default function CheckoutScreen() {
   );
 
   // Gestion du passage à l'étape suivante
+  const scrollViewRef = React.useRef < KeyboardAwareScrollView > null;
+
+  const scrollToTop = () => {
+    scrollViewRef.current?.scrollToPosition(0, true);
+  };
+
   const handleNext = () => {
     if (step === 1) {
       if (!userData.fullName.trim() || !userData.phone.trim()) {
@@ -64,13 +73,13 @@ export default function CheckoutScreen() {
         return;
       }
       setStep(2);
+      setTimeout(scrollToTop, 100);
     } else if (step === 2) {
       if (!paymentMethod) {
         Alert.alert("Erreur", "Veuillez choisir une méthode de paiement.");
         return;
       }
 
-      // Si c'est la carte, valide les champs
       if (paymentMethod === "card") {
         const { number, expiry, cvv, name } = cardInfo;
         if (!number || !expiry || !cvv || !name) {
@@ -80,7 +89,6 @@ export default function CheckoutScreen() {
           );
           return;
         }
-        // Validation simple du format
         if (number.replace(/\s/g, "").length < 16) {
           Alert.alert("Erreur", "Numéro de carte invalide.");
           return;
@@ -95,12 +103,33 @@ export default function CheckoutScreen() {
         }
       }
 
+      if (
+        paymentMethod === "mobile" &&
+        (!mobileInfo.phoneNumber || mobileInfo.phoneNumber.length < 10)
+      ) {
+        Alert.alert("Erreur", "Numéro de mobile money invalide.");
+        return;
+      }
+
       setStep(3);
+      setTimeout(scrollToTop, 100);
     }
   };
 
   const handleBack = () => {
     if (step > 1) setStep(step - 1);
+  };
+
+  const formatCardNumber = (text) => {
+    const cleaned = text.replace(/\s/g, "").slice(0, 16);
+    const formatted = cleaned.match(/.{1,4}/g)?.join(" ") || "";
+    return formatted;
+  };
+
+  const formatExpiry = (text) => {
+    const cleaned = text.replace(/\D/g, "");
+    if (cleaned.length <= 2) return cleaned;
+    return `${cleaned.slice(0, 2)}/${cleaned.slice(2, 4)}`;
   };
 
   const confirmOrder = () => {
@@ -153,108 +182,104 @@ export default function CheckoutScreen() {
         </View>
         <Stepper />
         {/* Scrollable Content */}
-        <ScrollView style={styles.content}>
+        <KeyboardAwareScrollView
+          style={styles.content}
+          contentContainerStyle={{ flexGrow: 1 }}
+          enableOnAndroid={true}
+          enableAutomaticScroll={true}
+          keyboardShouldPersistTaps="handled" // Important pour les boutons dans le scroll
+        >
           {/* Étape 1 */}
           {step === 1 && (
             <View style={styles.stepContainer}>
-              <KeyboardAwareScrollView
-                style={styles.containers}
-                contentContainerStyle={{ flexGrow: 1 }}
-                enableOnAndroid={true}
-                enableAutomaticScroll={true}
-              >
-                <Text style={styles.sectionTitle}>
-                  Informations personnelles
+              <Text style={styles.sectionTitle}>Informations personnelles</Text>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Nom complet *</Text>
+                <View style={styles.inputWrapper}>
+                  <Ionicons name="person-outline" size={20} color="#6B7280" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your full name"
+                    placeholderTextColor="#6B7280"
+                    value={userData.fullName}
+                    onChangeText={(text) =>
+                      setUserData({ ...userData, fullName: text })
+                    }
+                  />
+                </View>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Téléphone *</Text>
+                <View style={styles.inputWrapper}>
+                  <Ionicons name="call-outline" size={20} color="#6B7280" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your phone number"
+                    placeholderTextColor="#6B7280"
+                    keyboardType="phone-pad"
+                    value={userData.phone}
+                    onChangeText={(text) =>
+                      setUserData({ ...userData, phone: text })
+                    }
+                  />
+                </View>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={[styles.label, { color: "#9CA3AF" }]}>
+                  Email (facultatif)
                 </Text>
-
-                <View style={styles.inputGroup}>
-                  <Text style={styles.label}>Nom complet *</Text>
-                  <View style={styles.inputWrapper}>
-                    <Ionicons name="person-outline" size={20} color="#6B7280" />
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Enter your full name"
-                      value={userData.fullName}
-                      onChangeText={(text) =>
-                        setUserData({ ...userData, fullName: text })
-                      }
-                    />
-                  </View>
+                <View style={styles.inputWrapper}>
+                  <Ionicons name="mail-outline" size={20} color="#6B7280" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Your email"
+                    keyboardType="email-address"
+                    placeholderTextColor="#6B7280"
+                    value={userData.email}
+                    onChangeText={(text) =>
+                      setUserData({ ...userData, email: text })
+                    }
+                  />
                 </View>
+              </View>
 
-                <View style={styles.inputGroup}>
-                  <Text style={styles.label}>Téléphone *</Text>
-                  <View style={styles.inputWrapper}>
-                    <Ionicons name="call-outline" size={20} color="#6B7280" />
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Enter you phone number"
-                      keyboardType="phone-pad"
-                      value={userData.phone}
-                      onChangeText={(text) =>
-                        setUserData({ ...userData, phone: text })
-                      }
-                    />
-                  </View>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Adresse ou localisation</Text>
+                <View style={styles.inputWrapper}>
+                  <Ionicons name="location-outline" size={20} color="#6B7280" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Kigali, Kacyuru, Rue 19"
+                    placeholderTextColor="#6B7280"
+                    value={userData.location}
+                    onChangeText={(text) =>
+                      setUserData({ ...userData, location: text })
+                    }
+                  />
                 </View>
-
-                <View style={styles.inputGroup}>
-                  <Text style={[styles.label, { color: "#9CA3AF" }]}>
-                    Email (facultatif)
+                <TouchableOpacity>
+                  <Text style={styles.locationBtn}>
+                    📍 Utiliser ma position actuelle
                   </Text>
-                  <View style={styles.inputWrapper}>
-                    <Ionicons name="mail-outline" size={20} color="#6B7280" />
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Your email"
-                      keyboardType="email-address"
-                      value={userData.email}
-                      onChangeText={(text) =>
-                        setUserData({ ...userData, email: text })
-                      }
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.inputGroup}>
-                  <Text style={styles.label}>Adresse ou localisation</Text>
-                  <View style={styles.inputWrapper}>
-                    <Ionicons
-                      name="location-outline"
-                      size={20}
-                      color="#6B7280"
-                    />
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Kigali, Kacyuru, Rue 19"
-                      value={userData.location}
-                      onChangeText={(text) =>
-                        setUserData({ ...userData, location: text })
-                      }
-                    />
-                  </View>
-                  <TouchableOpacity>
-                    <Text style={styles.locationBtn}>
-                      📍 Utiliser ma position actuelle
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </KeyboardAwareScrollView>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
 
           {/* Étape 2 */}
           {step === 2 && (
             <View style={[styles.stepContainer, styles.activeStep]}>
-              <Text style={styles.sectionTitle}></Text>
-
+              {paymentMethod === "" && <Text style={styles.checkoutTitle}>Choose a payment method</Text>}
               {/* Méthodes de paiement en flex-row */}
               <View style={styles.paymentMethodsRow}>
                 {[
                   {
                     id: "card",
                     icon: "card-outline",
-                    title: "Carte",
+                    title: "Card",
                   },
                   {
                     id: "mobile",
@@ -264,7 +289,7 @@ export default function CheckoutScreen() {
                   {
                     id: "cash",
                     icon: "cash-outline",
-                    title: "À la livraison",
+                    title: "Cash on Delivery",
                   },
                 ].map((method) => (
                   <TouchableOpacity
@@ -283,6 +308,9 @@ export default function CheckoutScreen() {
                           cvv: "",
                           name: "",
                         });
+                      }
+                      if (method.id !== "mobile") {
+                        setMobileInfo({ phoneNumber: "" });
                       }
                     }}
                   >
@@ -337,7 +365,10 @@ export default function CheckoutScreen() {
                         placeholder="4242 4242 4242 4242"
                         value={cardInfo.number}
                         onChangeText={(text) =>
-                          setCardInfo({ ...cardInfo, number: text })
+                          setCardInfo({
+                            ...cardInfo,
+                            number: formatCardNumber(text),
+                          })
                         }
                         keyboardType="number-pad"
                         maxLength={19}
@@ -360,7 +391,10 @@ export default function CheckoutScreen() {
                             placeholder="MM/AA"
                             value={cardInfo.expiry}
                             onChangeText={(text) =>
-                              setCardInfo({ ...cardInfo, expiry: text })
+                              setCardInfo({
+                                ...cardInfo,
+                                expiry: formatExpiry(text),
+                              })
                             }
                             maxLength={5}
                             keyboardType="number-pad"
@@ -418,6 +452,49 @@ export default function CheckoutScreen() {
                   </View>
                 </KeyboardAwareScrollView>
               )}
+
+              {/* Formulaire de carte mobile  */}
+              {paymentMethod === "mobile" && (
+                <View style={styles.inputGroup}>
+                  <View style={styles.imageGroupe}>
+                    <Image
+                      source={require("../../assets/images/MTN.webp")}
+                      style={styles.illustration}
+                      contentFit="cover"
+                    />
+                    <Image
+                      source={require("../../assets/images/airtel.webp")}
+                      style={styles.illustration}
+                      contentFit="cover"
+                    />
+                    <Image
+                      source={require("../../assets/images/tigo.png")}
+                      style={styles.illustration}
+                      contentFit="cover"
+                    />
+                  </View>
+                  <Text style={styles.label}>Numéro Mobile Money *</Text>
+                  <View style={styles.inputWrapper}>
+                    <Ionicons
+                      name="phone-portrait-outline"
+                      size={20}
+                      color={COLORS.primary}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Enter your number to confirm"
+                      value={mobileInfo.phoneNumber}
+                      onChangeText={(text) =>
+                        setMobileInfo({ ...mobileInfo, phoneNumber: text })
+                      }
+                      keyboardType="phone-pad"
+                      maxLength={10}
+                    />
+                  </View>
+                </View>
+              )}
+
+              
             </View>
           )}
 
@@ -485,7 +562,7 @@ export default function CheckoutScreen() {
               </View>
             </View>
           )}
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
         {/* Boutons en bas */}
         <View style={styles.buttonContainer}>

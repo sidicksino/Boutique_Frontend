@@ -28,6 +28,15 @@ export const getStyles = (COLORS) => StyleSheet.create({
         justifyContent: "center",
         textAlign: "center"
     },
+    checkoutTitle: {
+        justifyContent: "center",
+        textAlign: "center",
+        fontSize: 25,
+        fontWeight: "600",
+        color: COLORS.primary,
+        marginBottom: 0,
+        paddingVertical: 20,
+    },
     stepper: {
         flexDirection: "row",
         justifyContent: "center",
@@ -90,6 +99,17 @@ export const getStyles = (COLORS) => StyleSheet.create({
     },
     inputGroup: {
         marginBottom: 16,
+    },
+    imageGroupe:{
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        gap: 40
+    },
+    illustration:{
+        height: 80,
+        width: 120,
+        resizeMode: "contain",  
     },
     label: {
         fontSize: 14,
@@ -271,7 +291,7 @@ export const getStyles = (COLORS) => StyleSheet.create({
     },
     activeStep: {
         backgroundColor: "transparent",
-        top: -30,
+        top: 0,
     },
     paymentMethodCard: {
         flex: 1,
