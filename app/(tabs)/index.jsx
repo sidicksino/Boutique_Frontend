@@ -7,6 +7,7 @@ import { ResizeMode, Video } from "expo-av";
 import { router } from "expo-router";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, RefreshControl, Text, View } from "react-native";
+import ChatButton from "../../components/ChatButton";
 import { ThemeContext } from "../../context/ThemeContext";
 
 const HomeScreen = () => {
@@ -125,6 +126,7 @@ const HomeScreen = () => {
           }
         />
       )}
+      <ChatButton />
     </View>
   );
 };
