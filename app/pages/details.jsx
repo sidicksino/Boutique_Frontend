@@ -62,7 +62,7 @@ const DetailsScreen = () => {
         <View style={styles.contentContainer}>
           <View style={styles.header}>
             <Text style={styles.name}>{parsedProduct.name}</Text>
-            <Text style={styles.price}>${parsedProduct.price}</Text>
+            <Text style={styles.price}>{parsedProduct.price} FCFA</Text>
           </View>
 
           <View style={styles.divider} />

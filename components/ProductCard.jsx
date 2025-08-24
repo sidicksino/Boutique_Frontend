@@ -156,7 +156,7 @@ const ProductCard = ({ product, onToggle }) => {
           </Text>
 
           <View style={styles.row}>
-            <Text style={styles.price}>${product.price}</Text>
+            <Text style={styles.price}>{product.price} FCFA</Text>
           </View>
         </View>
       </View>

@@ -194,7 +194,7 @@ const ProductAdmin = () => {
                 </View>
                 <View>
                   <Text style={styles.infoText}>{product.name}</Text>
-                  <Text style={styles.infoText}>Price : ${product.price}</Text>
+                  <Text style={styles.infoText}>Price : {product.price} FCFA</Text>
                   <Text style={styles.infoText}>
                     Category : {product.category_name}
                   </Text>

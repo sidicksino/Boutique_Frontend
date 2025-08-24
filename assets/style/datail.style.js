@@ -147,21 +147,28 @@ export const getStyles = (COLORS) => StyleSheet.create({
         marginRight: 10,
     },
     imageContainerCategory: {
-        height: 200,
+        height: 230,
         position: 'relative',
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 20,
-    },
+        padding: 15,
+        borderRadius: 20,
+        overflow: 'hidden',
+        backgroundColor: COLORS.background,
+        shadowColor: COLORS.primary,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 6,
+      },
     categoryImage: {
         width: "100%",
         height: "100%",
         resizeMode: "cover",
+        borderRadius: 20
     },
-    imageOverlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.4)',
-    },
+    
     categoryTitle: {
         position: 'absolute',
         fontSize: 32,

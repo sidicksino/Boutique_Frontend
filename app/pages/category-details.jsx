@@ -74,8 +74,6 @@ const CategoryDetails = () => {
               style={styles.categoryImage}
               resizeMode="cover"
             />
-            <View style={styles.imageOverlay} />
-            <Text style={styles.categoryTitle}>{categoryName}</Text>
           </View>
         )}
 
