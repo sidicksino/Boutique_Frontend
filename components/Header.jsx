@@ -56,6 +56,7 @@ const Header = () => {
   return (
     <View style={styles.header}>
       <View style={styles.headerLeft}>
+        <Image source={require("../assets/images/3dlogo6.png")} style={styles.headerLogo} />
         <Text style={styles.headerTitle}>Sino</Text>
       </View>
       <View style={styles.headerRight}>

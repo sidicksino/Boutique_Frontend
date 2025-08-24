@@ -26,6 +26,19 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+
+  const getUserIdFromToken = (token) => {
+    try {
+      const payload = token.split(".")[1]; // Récupère le payload (partie 2)
+      const decoded = JSON.parse(atob(payload)); // atob = base64 decode
+      return decoded.user_id; // correspond à ce que tu mets dans jwt.sign
+    } catch (error) {
+      console.error("Erreur décodage JWT:", error);
+      return null;
+    }
+  };
+
+  
   const onLoginPress = async () => {
     setError(""); // réinitialiser l’erreur à chaque tentative
 
@@ -50,9 +63,15 @@ const LoginScreen = () => {
       });
 
       const data = await response.json();
+      console.log("🔍 Réponse login:", data); 
 
       if (response.ok) {
         await AsyncStorage.setItem("userToken", data.token);
+        await AsyncStorage.setItem("userRole", data.role);
+        const userId = getUserIdFromToken(data.token);
+        if (userId) {
+          await AsyncStorage.setItem("userId", userId);
+        }
         router.replace("/(tabs)");
       } else if (response.status === 401) {
         setError("Email or password incorrect");

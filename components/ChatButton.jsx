@@ -1,46 +1,7 @@
-// import Ionicons from "@expo/vector-icons/Ionicons";
-// import { useNavigation } from "@react-navigation/native";
-// import React, { useContext } from "react";
-// import { Pressable, StyleSheet } from "react-native";
-// import { ThemeContext } from "../context/ThemeContext";
-
-// const getStyles = (COLORS) =>
-//   StyleSheet.create({
-//     chatStyle: {
-//       position: "absolute",
-//       bottom: 100,
-//       right: 20,
-//       width: 60,
-//       height: 60,
-//       backgroundColor: COLORS.primary,
-//       borderRadius: 30,
-//       justifyContent: "center",
-//       alignItems: "center",
-//       elevation: 5,
-//       shadowColor: "#000",
-//       shadowOffset: { width: 0, height: 2 },
-//       shadowOpacity: 0.3,
-//       shadowRadius: 3,
-//     },
-//   });
-
-// export default function ChatButton() {
-//   const { COLORS } = useContext(ThemeContext);
-//   const styles = getStyles(COLORS);
-//   const navigation = useNavigation();
-
-//   return (
-//     <Pressable
-//       style={styles.chatStyle}
-//       onPress={() => navigation.navigate("ChatPage")}
-//     >
-//       <Ionicons name="chatbubbles" size={28} color="white" />
-//     </Pressable>
-//   );
-// }
-
+// components/ChatButton.tsx
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import React, { useContext, useRef } from "react";
 import { Animated, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { ThemeContext } from "../context/ThemeContext";
@@ -48,24 +9,29 @@ import { ThemeContext } from "../context/ThemeContext";
 export default function ChatButton() {
   const { COLORS } = useContext(ThemeContext);
   const styles = getStyles(COLORS);
-  const navigation = useNavigation();
+  const router = useRouter();
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const onPressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.1,
+      toValue: 0.9,
       useNativeDriver: true,
     }).start();
   };
 
-  const onPressOut = () => {
+  const onPressOut = async () => {
     Animated.spring(scaleAnim, {
       toValue: 1,
       friction: 3,
       tension: 40,
       useNativeDriver: true,
-    }).start(() => {
-      navigation.navigate("ChatPage");
+    }).start(async () => {
+      const role = await AsyncStorage.getItem("userRole");
+      if (role === "Admin") {
+        router.push("/chat/ChatMonitor"); // 👉 Admin voit tout
+      } else {
+        router.push("/chat/ChatPage"); // 👉 Client voit son chat
+      }
     });
   };
 
@@ -90,12 +56,13 @@ const getStyles = (COLORS) =>
       height: 60,
       backgroundColor: COLORS.primary,
       borderRadius: 30,
-      alignItems: "center",
       justifyContent: "center",
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
+      alignItems: "center",
       elevation: 5,
+      zIndex: 10,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 3,
     },
   });
